@@ -24,9 +24,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |
 */
 
-$config['base_url'] = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on") ? "https" : "http");
-$config['base_url'] .= "://".$_SERVER['HTTP_HOST'];
-$config['base_url'] .= str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']);
+$forwarded_https = isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) === 'https';
+$request_https = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || $forwarded_https;
+$configured_url = rtrim((string) getenv('APP_URL'), '/');
+
+if ($configured_url !== '') {
+    $config['base_url'] = $configured_url . '/';
+} else {
+    $config['base_url'] = ($request_https ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'];
+    $config['base_url'] .= str_replace(basename($_SERVER['SCRIPT_NAME']), '', $_SERVER['SCRIPT_NAME']);
+}
 
 /*
 |--------------------------------------------------------------------------
@@ -327,7 +334,7 @@ $config['cache_query_string'] = FALSE;
 | https://codeigniter.com/user_guide/libraries/encryption.html
 |
 */
-$config['encryption_key'] = '';
+$config['encryption_key'] = getenv('APP_ENCRYPTION_KEY') ?: '';
 
 /*
 |--------------------------------------------------------------------------
@@ -409,7 +416,7 @@ $config['same_site'] = null;
 $config['cookie_prefix']	= '';
 $config['cookie_domain']	= '';
 $config['cookie_path']		= '/';
-$config['cookie_secure']	= ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on") ? TRUE : FALSE);
+$config['cookie_secure']	= $request_https;
 $config['cookie_httponly'] 	= FALSE;
 
 

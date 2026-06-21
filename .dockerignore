@@ -1,0 +1,10 @@
+.git
+.gitignore
+.idea
+.vscode
+backups
+Academy-LMS.zip
+assets/global/logo/BMA.jpg
+application/cache/*
+application/logs/*
+*.log
