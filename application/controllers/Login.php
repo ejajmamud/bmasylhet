@@ -27,9 +27,20 @@ class Login extends CI_Controller
         //Check custom session data
         $this->user_model->check_session_data('login');
 
-        $page_data['page_name'] = 'login';
-        $page_data['page_title'] = site_phrase('login');
-        $this->load->view('frontend/' . get_frontend_settings('theme') . '/index', $page_data);
+        $requested_language = strtolower((string) $this->input->get('lang'));
+        if (in_array($requested_language, ['en', 'bn'], true)) {
+            $this->session->set_userdata('verification_language', $requested_language);
+        }
+
+        $page_data['inner_view'] = 'verification_login';
+        $page_data['page_title'] = 'Staff Login';
+        $page_data['official_name'] = 'Bangladesh Marine Academy Sylhet';
+        $page_data['brand_color'] = '#00A63E';
+        $page_data['support_email'] = 'ejajjoy3@gmail.com';
+        $page_data['language_code'] = in_array($this->session->userdata('verification_language'), ['en', 'bn'], true)
+            ? $this->session->userdata('verification_language')
+            : 'en';
+        $this->load->view('frontend/' . get_frontend_settings('theme') . '/verification_shell', $page_data);
     }
 
     public function sign_up()

@@ -96,6 +96,7 @@
             line-height: 1.55;
         }
         .bma-topbar {
+            display: none;
             min-height: 34px;
             background: var(--bma-brand-deep);
             color: #fff;
@@ -477,7 +478,9 @@
                     <a class="<?php echo $language_code === 'bn' ? 'active' : ''; ?>" href="<?php echo site_url('/?lang=bn'); ?>" lang="bn" hreflang="bn">BN</a>
                 </span>
                 <a class="btn btn-sm bma-outline" href="<?php echo site_url('/'); ?>"><?php echo html_escape($tr('Verify', 'সনদ যাচাই')); ?></a>
-                <a class="btn btn-sm btn-light border" href="<?php echo site_url('login'); ?>"><?php echo html_escape($tr('Staff Login', 'কর্মকর্তা লগইন')); ?></a>
+                <?php if ($this->uri->segment(1) !== 'login'): ?>
+                    <a class="btn btn-sm btn-light border" href="<?php echo site_url('login'); ?>"><?php echo html_escape($tr('Staff Login', 'কর্মকর্তা লগইন')); ?></a>
+                <?php endif; ?>
             </nav>
         </div>
     </header>

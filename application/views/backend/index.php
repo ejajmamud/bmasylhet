@@ -14,7 +14,7 @@
     <!-- all the css files -->
     <?php include 'includes_top.php'; ?>
 </head>
-<body data-layout="detached">
+<body data-layout="detached" class="bma-dashboard">
     <!-- HEADER -->
     <?php include 'header.php'; ?>
     <div class="container-fluid">

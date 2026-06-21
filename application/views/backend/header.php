@@ -2,12 +2,16 @@
 <div class="navbar-custom topnav-navbar topnav-navbar-dark">
     <div class="container-fluid">
         <!-- LOGO -->
-        <a href="<?php echo site_url($this->session->userdata('role')); ?>" class="topnav-logo" style="min-width: unset;">
+        <a href="<?php echo site_url($this->session->userdata('role')); ?>" class="topnav-logo bma-dashboard-brand">
             <span class="topnav-logo-lg">
-                <img src="<?php echo base_url('uploads/system/' . get_frontend_settings('small_logo')); ?>" alt="" height="40">
+                <img src="<?php echo base_url('assets/global/logo/bangladesh_logo.png'); ?>" alt="Bangladesh Government logo" height="46">
+                <span class="bma-dashboard-brand-copy">
+                    <strong>Bangladesh Marine Academy Sylhet</strong>
+                    <small>Certificate Administration</small>
+                </span>
             </span>
             <span class="topnav-logo-sm">
-                <img src="<?php echo base_url('uploads/system/' . get_frontend_settings('small_logo')); ?>" alt="" height="40">
+                <img src="<?php echo base_url('assets/global/logo/bangladesh_logo.png'); ?>" alt="Bangladesh Government logo" height="40">
             </span>
         </a>
 
@@ -258,8 +262,7 @@
             </div>
         </a>
         <div class="visit_website">
-            <h4 style="color: #fff; float: left;" class="d-none d-md-inline-block"> <?php echo $this->db->get_where('settings', array('key' => 'system_name'))->row()->value; ?></h4>
-            <a href="<?php echo site_url('home'); ?>" target="" class="btn btn-outline-light ml-3 d-none d-md-inline-block"><?php echo get_phrase('visit_website'); ?></a>
+            <a href="<?php echo site_url('/'); ?>" target="" class="btn btn-outline-light d-none d-md-inline-block">Public Verification Portal</a>
         </div>
     </div>
 </div>
