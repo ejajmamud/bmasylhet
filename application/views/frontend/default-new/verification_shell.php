@@ -603,7 +603,9 @@
                     <a class="<?php echo $language_code === 'en' ? 'active' : ''; ?>" href="<?php echo site_url('/?lang=en'); ?>" lang="en" hreflang="en">EN</a>
                     <a class="<?php echo $language_code === 'bn' ? 'active' : ''; ?>" href="<?php echo site_url('/?lang=bn'); ?>" lang="bn" hreflang="bn">BN</a>
                 </span>
-                <a class="btn btn-sm bma-outline" href="<?php echo site_url('/'); ?>"><?php echo html_escape($tr('verify_button')); ?></a>
+                <?php if ($inner_view !== 'verification_home'): ?>
+                    <a class="btn btn-sm bma-outline" href="<?php echo site_url('/'); ?>"><?php echo html_escape($tr('verify_button')); ?></a>
+                <?php endif; ?>
                 <?php if ($this->uri->segment(1) !== 'login'): ?>
                     <a class="btn btn-sm btn-light border" href="<?php echo site_url('login'); ?>"><?php echo html_escape($tr('staff_login')); ?></a>
                 <?php endif; ?>
