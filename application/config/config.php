@@ -31,8 +31,10 @@ $configured_url = rtrim((string) getenv('APP_URL'), '/');
 if ($configured_url !== '') {
     $config['base_url'] = $configured_url . '/';
 } else {
-    $config['base_url'] = ($request_https ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'];
-    $config['base_url'] .= str_replace(basename($_SERVER['SCRIPT_NAME']), '', $_SERVER['SCRIPT_NAME']);
+    $request_host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+    $script_name = $_SERVER['SCRIPT_NAME'] ?? '/index.php';
+    $config['base_url'] = ($request_https ? 'https' : 'http') . '://' . $request_host;
+    $config['base_url'] .= str_replace(basename($script_name), '', $script_name);
 }
 
 /*
@@ -389,14 +391,14 @@ $config['encryption_key'] = getenv('APP_ENCRYPTION_KEY') ?: '';
 */
 $config['sess_driver'] = 'database';
 $config['sess_cookie_name'] = 'ci_session';
-$config['sess_expiration'] = 864000;//10 days
+$config['sess_expiration'] = 28800;
 $config['sess_save_path'] = 'ci_sessions';
 $config['sess_match_ip'] = FALSE;
-$config['sess_time_to_update'] = 864000;
+$config['sess_time_to_update'] = 300;
 $config['sess_regenerate_destroy'] = TRUE;
 $config['sess_match_useragent'] = FALSE;
 $config['sess_expire_on_close'] = FALSE;
-$config['same_site'] = null;
+$config['same_site'] = 'Lax';
 
 /*
 |--------------------------------------------------------------------------
@@ -417,7 +419,7 @@ $config['cookie_prefix']	= '';
 $config['cookie_domain']	= '';
 $config['cookie_path']		= '/';
 $config['cookie_secure']	= $request_https;
-$config['cookie_httponly'] 	= FALSE;
+$config['cookie_httponly'] 	= TRUE;
 
 
 //Auto Logout

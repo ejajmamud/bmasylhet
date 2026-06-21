@@ -53,13 +53,30 @@ $route['default_controller'] = 'verification';
 $route['404_override']       = 'home/page_not_found';
 $route['certificate/(:any)'] = "addons/certificate/generate_certificate/$1";
 $route['verify/certificate'] = 'verification/certificate';
+$route['verify/cadet'] = 'verification/cadet';
 $route['verify/student-id']  = 'verification/student_id';
 $route['verify/student-name'] = 'verification/student_name';
 $route['verify/qr/(:any)']   = 'verification/qr/$1';
 $route['verify/result/(:any)'] = 'verification/result/$1';
 $route['verify/print/(:any)'] = 'verification/print_receipt/$1';
+$route['verify/photo/(:any)'] = 'verification/photo/$1';
+$route['verify/document/(:any)'] = 'verification/document/$1';
 $route['verify/captcha']     = 'verification/captcha';
 $route['verification/captcha'] = 'verification/captcha';
+
+// Cadet verification administration
+$route['admin/cadets'] = 'cadet_admin/index';
+$route['admin/cadets/create'] = 'cadet_admin/create';
+$route['admin/cadets/store'] = 'cadet_admin/store';
+$route['admin/cadets/edit/(:num)'] = 'cadet_admin/edit/$1';
+$route['admin/cadets/update/(:num)'] = 'cadet_admin/update/$1';
+$route['admin/cadets/view/(:num)'] = 'cadet_admin/view/$1';
+$route['admin/cadets/publish/(:num)'] = 'cadet_admin/publish/$1';
+$route['admin/cadets/status/(:num)/(:any)'] = 'cadet_admin/status/$1/$2';
+$route['admin/cadets/photo/(:any)'] = 'cadet_admin/photo/$1';
+$route['admin/cadets/document/(:any)'] = 'cadet_admin/document/$1';
+$route['admin/verification-logs'] = 'cadet_admin/verificationLogs';
+$route['admin/audit-logs'] = 'cadet_admin/auditLogs';
 
 //course bundles
 $route['course_bundles/(:any)']               = "addons/course_bundles/index/$1";

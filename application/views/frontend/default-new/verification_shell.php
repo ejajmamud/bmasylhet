@@ -573,6 +573,181 @@
             .bma-intro-logo { width: 92px; height: 92px; }
         }
         <?php endif; ?>
+
+        .bma-topbar { display: none !important; }
+        .bma-cadet-form { padding: 22px 26px 26px; }
+        .bma-cadet-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+        }
+        .bma-captcha-row {
+            display: grid;
+            grid-template-columns: minmax(180px, 1fr) auto minmax(210px, .8fr);
+            gap: 16px;
+            align-items: end;
+            margin-top: 18px;
+        }
+        .bma-captcha-wrap { display: flex; align-items: center; gap: 8px; min-height: 48px; }
+        .bma-icon-button {
+            width: 46px;
+            height: 46px;
+            padding: 0;
+            border: 1px solid var(--bma-line);
+            background: var(--bma-white);
+            color: var(--bma-brand-dark);
+        }
+        .bma-verify-submit { min-height: 46px; }
+        .bma-result-section { padding: 38px 0 52px; background: var(--bma-soft); min-height: 70vh; }
+        .bma-verification-banner {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 20px;
+            align-items: center;
+            padding: 24px 28px;
+            background: var(--bma-white);
+            border: 1px solid var(--bma-line);
+            border-left: 5px solid var(--bma-brand);
+            box-shadow: 0 4px 16px rgba(19, 50, 31, .08);
+        }
+        .bma-verification-banner.is-suspended { border-left-color: var(--bma-danger); }
+        .bma-seal-icon {
+            display: grid;
+            place-items: center;
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            background: var(--bma-brand);
+            color: #fff;
+            font-size: 25px;
+        }
+        .is-suspended .bma-seal-icon { background: var(--bma-danger); }
+        .bma-result-eyebrow {
+            display: block;
+            color: var(--bma-brand-dark);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+        .bma-verification-banner h1 { font-size: 25px; margin: 0 0 3px; }
+        .bma-verification-banner p { margin: 0; color: var(--bma-muted); }
+        .bma-verification-time { text-align: right; border-left: 1px solid var(--bma-line); padding-left: 22px; }
+        .bma-verification-time span { display: block; color: var(--bma-muted); font-size: 12px; }
+        .bma-verification-time strong { display: block; margin-top: 4px; font-size: 13px; }
+        .bma-result-layout {
+            display: grid;
+            grid-template-columns: 300px minmax(0, 1fr);
+            gap: 22px;
+            margin-top: 22px;
+        }
+        .bma-cadet-profile,
+        .bma-document-panel {
+            background: var(--bma-white);
+            border: 1px solid var(--bma-line);
+            box-shadow: 0 3px 14px rgba(19, 50, 31, .06);
+        }
+        .bma-cadet-profile { padding: 22px; }
+        .bma-photo-frame {
+            width: 100%;
+            aspect-ratio: 4 / 5;
+            overflow: hidden;
+            background: var(--bma-soft);
+            border: 1px solid var(--bma-line);
+        }
+        .bma-photo-frame img { width: 100%; height: 100%; object-fit: cover; }
+        .bma-profile-copy { padding: 18px 0; border-bottom: 1px solid var(--bma-line); }
+        .bma-department-tag {
+            display: inline-block;
+            padding: 4px 7px;
+            background: var(--bma-soft);
+            color: var(--bma-brand-dark);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .bma-profile-copy h2 { font-size: 19px; margin: 11px 0 4px; }
+        .bma-cadet-number { color: var(--bma-brand-dark); font-weight: 700; }
+        .bma-profile-details { margin: 12px 0 0; }
+        .bma-profile-details div { display: flex; justify-content: space-between; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--bma-line); }
+        .bma-profile-details div:last-child { border-bottom: 0; }
+        .bma-profile-details dt { color: var(--bma-muted); font-weight: 400; }
+        .bma-profile-details dd { margin: 0; text-align: right; font-weight: 700; }
+        .bma-document-panel { padding: 26px; }
+        .bma-document-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+        .bma-document-heading h2 { margin: 0; font-size: 22px; }
+        .bma-document-count { color: var(--bma-brand-dark); font-size: 12px; font-weight: 700; }
+        .bma-document-list { border-top: 1px solid var(--bma-line); }
+        .bma-document-item {
+            display: grid;
+            grid-template-columns: 34px 42px minmax(0, 1fr) auto auto;
+            gap: 14px;
+            align-items: center;
+            min-height: 86px;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--bma-line);
+        }
+        .bma-document-index { color: var(--bma-muted); font-size: 12px; font-weight: 700; }
+        .bma-document-icon {
+            display: grid;
+            place-items: center;
+            width: 42px;
+            height: 42px;
+            background: var(--bma-soft);
+            color: var(--bma-brand-dark);
+            font-size: 18px;
+        }
+        .bma-document-copy h3 { margin: 0 0 3px; font-size: 14px; }
+        .bma-document-copy span { color: var(--bma-muted); font-size: 12px; }
+        .bma-document-status { font-size: 12px; font-weight: 700; white-space: nowrap; }
+        .bma-document-status.is-valid { color: var(--bma-brand-dark); }
+        .bma-document-status.is-missing { color: var(--bma-danger); }
+        .bma-document-action {
+            display: inline-flex;
+            gap: 6px;
+            align-items: center;
+            border: 1px solid var(--bma-line);
+            color: var(--bma-brand-dark);
+            background: var(--bma-white);
+        }
+        .bma-document-action:hover { background: var(--bma-brand); border-color: var(--bma-brand); color: #fff; }
+        .bma-result-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 22px; }
+        .bma-trust-note {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-top: 18px;
+            padding: 14px 18px;
+            background: var(--bma-white);
+            border: 1px solid var(--bma-line);
+            color: var(--bma-brand-dark);
+        }
+        .bma-trust-note i { font-size: 22px; }
+        .bma-trust-note strong, .bma-trust-note span { display: block; }
+        .bma-trust-note span { color: var(--bma-muted); font-size: 11px; margin-top: 2px; }
+        @media (max-width: 991.98px) {
+            .bma-cadet-grid { grid-template-columns: 1fr 1fr; }
+            .bma-captcha-row { grid-template-columns: 1fr auto; }
+            .bma-verify-submit { grid-column: 1 / -1; }
+            .bma-result-layout { grid-template-columns: 250px minmax(0, 1fr); }
+            .bma-document-item { grid-template-columns: 28px 38px minmax(0, 1fr) auto; }
+            .bma-document-status { display: none; }
+        }
+        @media (max-width: 767.98px) {
+            .bma-cadet-form { padding: 18px; }
+            .bma-cadet-grid, .bma-captcha-row { grid-template-columns: 1fr; }
+            .bma-verify-submit { grid-column: auto; }
+            .bma-verification-banner { grid-template-columns: auto 1fr; padding: 20px; }
+            .bma-verification-time { grid-column: 1 / -1; text-align: left; border-left: 0; border-top: 1px solid var(--bma-line); padding: 14px 0 0; }
+            .bma-result-layout { grid-template-columns: 1fr; }
+            .bma-cadet-profile { display: grid; grid-template-columns: 120px 1fr; gap: 18px; }
+            .bma-profile-copy { padding-top: 0; }
+            .bma-profile-details { grid-column: 1 / -1; }
+            .bma-document-panel { padding: 18px; }
+            .bma-document-item { grid-template-columns: 28px 36px minmax(0, 1fr); }
+            .bma-document-action { grid-column: 2 / -1; justify-self: start; }
+            .bma-result-actions { flex-direction: column; }
+        }
     </style>
 </head>
 <body class="<?php echo $is_academy_theme ? 'academy-default-theme' : 'govt-green-theme'; ?>">

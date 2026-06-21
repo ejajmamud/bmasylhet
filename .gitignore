@@ -17,6 +17,8 @@ application/libraries/phpqrcode/cache/*
 Academy-LMS.zip
 backups/*
 !backups/.gitkeep
+assets/global/client_files/
+storage/private/
 *.log
 *.pid
 

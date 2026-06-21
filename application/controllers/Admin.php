@@ -14,6 +14,9 @@ class Admin extends CI_Controller
         /*cache control*/
         $this->output->set_header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
         $this->output->set_header('Pragma: no-cache');
+        $this->output->set_header('X-Frame-Options: SAMEORIGIN');
+        $this->output->set_header('X-Content-Type-Options: nosniff');
+        $this->output->set_header('Referrer-Policy: strict-origin-when-cross-origin');
 
         $this->user_model->check_session_data('admin');
 
@@ -34,8 +37,21 @@ class Admin extends CI_Controller
         if ($this->session->userdata('admin_login') != true) {
             redirect(site_url('login'), 'refresh');
         }
+        $this->load->model('cadet_model');
+        $this->cadet_model->ensureSchema();
         $page_data['page_name']  = 'dashboard';
         $page_data['page_title'] = get_phrase('dashboard');
+        $page_data['cadet_metrics'] = $this->cadet_model->metrics();
+        $page_data['recent_cadets'] = $this->cadet_model->all([]);
+        $page_data['recent_cadets'] = array_slice($page_data['recent_cadets'], 0, 8);
+        $page_data['recent_verifications'] = $this->db
+            ->select('cadet_verification_logs.*, cadets.cadet_number, cadets.full_name')
+            ->from('cadet_verification_logs')
+            ->join('cadets', 'cadets.id = cadet_verification_logs.cadet_id', 'left')
+            ->order_by('cadet_verification_logs.verified_at', 'DESC')
+            ->limit(8)
+            ->get()
+            ->result_array();
         $this->load->view('backend/index.php', $page_data);
     }
 
@@ -4487,6 +4503,4 @@ $developer_html
                     // Home page builder
 
                     }
-
-
 

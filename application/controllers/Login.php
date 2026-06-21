@@ -16,6 +16,7 @@ class Login extends CI_Controller
         /*cache control*/
         $this->output->set_header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
         $this->output->set_header('Pragma: no-cache');
+        $this->setSecurityHeaders();
 
 
         //Check custom session data
@@ -40,6 +41,7 @@ class Login extends CI_Controller
         $page_data['official_name'] = get_settings('system_name') ?: 'Bangladesh Marine Academy Sylhet';
         $page_data['brand_color'] = '#00A63E';
         $page_data['support_email'] = get_settings('system_email') ?: 'ejajjoy3@gmail.com';
+        $page_data['login_form_token'] = $this->loginFormToken();
         $this->load->view('frontend/' . get_frontend_settings('theme') . '/verification_shell', $page_data);
     }
 
@@ -58,6 +60,22 @@ class Login extends CI_Controller
 
     public function validate_login($from = "")
     {
+        $expected_token = (string) $this->session->userdata('login_form_token');
+        $actual_token = (string) $this->input->post('_login_token');
+        if ($expected_token === '' || ! hash_equals($expected_token, $actual_token)) {
+            $this->session->set_flashdata('error_message', 'Your login form expired. Please try again.');
+            redirect(site_url('login'), 'refresh');
+        }
+
+        $attempts = (array) $this->session->userdata('login_attempts');
+        $now = time();
+        $attempts = array_values(array_filter($attempts, static function ($timestamp) use ($now) {
+            return (int) $timestamp >= $now - 900;
+        }));
+        if (count($attempts) >= 8) {
+            $this->session->set_flashdata('error_message', 'Too many login attempts. Please wait before trying again.');
+            redirect(site_url('login'), 'refresh');
+        }
         if ($this->crud_model->check_recaptcha() == false && (get_frontend_settings('recaptcha_status') == true || get_frontend_settings('recaptcha_status_v3') == true)) {
             $this->session->set_flashdata('error_message', get_phrase('recaptcha_verification_failed'));
             redirect(site_url('login'), 'refresh');
@@ -71,13 +89,36 @@ class Login extends CI_Controller
         $query = $this->db->get_where('users', $credential);
 
         if ($query->num_rows() > 0) {
+            $this->session->unset_userdata('login_attempts');
+            $this->session->unset_userdata('login_form_token');
             $row = $query->row();
             $this->user_model->new_device_login_tracker($row->id);
             $this->user_model->set_login_userdata($row->id);
         } else {
+            $attempts[] = $now;
+            $this->session->set_userdata('login_attempts', $attempts);
             $this->session->set_flashdata('error_message', get_phrase('invalid_login_credentials'));
             redirect(site_url('login'), 'refresh');
         }
+    }
+
+    private function loginFormToken()
+    {
+        $token = $this->session->userdata('login_form_token');
+        if (! $token) {
+            $token = bin2hex(random_bytes(32));
+            $this->session->set_userdata('login_form_token', $token);
+        }
+        return $token;
+    }
+
+    private function setSecurityHeaders()
+    {
+        $this->output
+            ->set_header('X-Frame-Options: SAMEORIGIN')
+            ->set_header('X-Content-Type-Options: nosniff')
+            ->set_header('Referrer-Policy: strict-origin-when-cross-origin')
+            ->set_header('Permissions-Policy: camera=(self), microphone=(), geolocation=()');
     }
 
     function new_login_confirmation($param1 = ""){

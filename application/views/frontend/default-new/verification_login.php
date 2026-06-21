@@ -34,6 +34,7 @@
                 </div>
 
                 <form class="bma-login-form" action="<?php echo site_url('login/validate_login'); ?>" method="post" id="login-form">
+                    <input type="hidden" name="_login_token" value="<?php echo html_escape($login_form_token); ?>">
                     <?php if ($this->session->flashdata('error_message')): ?>
                         <div class="alert alert-danger" role="alert"><?php echo html_escape($this->session->flashdata('error_message')); ?></div>
                     <?php endif; ?>

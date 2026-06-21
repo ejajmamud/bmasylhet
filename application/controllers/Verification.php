@@ -4,7 +4,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Verification extends CI_Controller
 {
     private $theme = 'default-new';
-    private $publicStatuses = ['published', 'valid', 'expired', 'revoked', 'suspended'];
+    private $storageRoot;
 
     public function __construct()
     {
@@ -12,12 +12,20 @@ class Verification extends CI_Controller
         $this->load->database();
         $this->load->library('session');
         $this->load->helper(['url', 'security']);
+        $this->load->model('cadet_model');
+        $this->config->load('cadet');
+        $this->cadet_model->ensureSchema();
+        $this->storageRoot = rtrim(config_item('cadet_private_storage'), '/\\');
+        $this->output
+            ->set_header('X-Frame-Options: SAMEORIGIN')
+            ->set_header('X-Content-Type-Options: nosniff')
+            ->set_header('Referrer-Policy: strict-origin-when-cross-origin')
+            ->set_header('Permissions-Policy: camera=(self), microphone=(), geolocation=()');
 
         $requestedLanguage = strtolower((string) $this->input->get('lang'));
         if (in_array($requestedLanguage, ['en', 'bn'], true)) {
             $this->session->set_userdata('verification_language', $requestedLanguage);
         }
-
         if (function_exists('get_frontend_settings') && get_frontend_settings('theme')) {
             $this->theme = get_frontend_settings('theme');
         }
@@ -26,233 +34,185 @@ class Verification extends CI_Controller
     public function index()
     {
         $this->render('verification_home', [
-            'institutions' => $this->db->order_by('name', 'ASC')->get('institutions')->result_array(),
+            'departments' => $this->cadet_model->departments(),
+            'verification_form_token' => $this->verificationFormToken(),
         ]);
     }
 
-    public function certificate()
+    public function cadet()
     {
         $this->requirePost();
-        if (! $this->captchaIsValid($this->input->post('captcha'), 'certificate')) {
-            return $this->invalid('certificate_number', $this->input->post('certificate_number'), 'The verification code did not match.');
+        $expectedToken = (string) $this->session->userdata('verification_form_token');
+        $actualToken = (string) $this->input->post('_verification_token');
+        if ($expectedToken === '' || ! hash_equals($expectedToken, $actualToken)) {
+            return $this->invalid(null, null, null, 'invalid_form', 'Your verification form expired. Refresh the page and try again.');
+        }
+        if ($this->isRateLimited()) {
+            return $this->invalid(null, null, null, 'rate_limited');
+        }
+        if (! $this->captchaIsValid($this->input->post('captcha'))) {
+            return $this->invalid(null, null, null, 'invalid_captcha', 'The verification code did not match.');
         }
 
-        $number = $this->normalizeCertificateNumber($this->input->post('certificate_number'));
-        if ($number === '') {
-            return $this->invalid('certificate_number', '', 'Enter a certificate number to verify.');
+        $departmentId = (int) $this->input->post('department_id');
+        $cadetNumber = trim((string) $this->input->post('cadet_number'));
+        $dateOfBirth = trim((string) $this->input->post('date_of_birth'));
+        $date = DateTime::createFromFormat('Y-m-d', $dateOfBirth);
+        $validDepartment = $this->db->where(['id' => $departmentId, 'status' => 'active'])->get('departments')->num_rows();
+
+        if (! $validDepartment || $this->cadet_model->normalizeCadetNumber($cadetNumber) === '' || ! $date || $date->format('Y-m-d') !== $dateOfBirth) {
+            return $this->invalid($departmentId, $cadetNumber, $dateOfBirth);
         }
 
-        $certificate = $this->certificateQuery()
-            ->where('UPPER(REPLACE(REPLACE(REPLACE(certificates.certificate_number, " ", ""), "-", ""), "/", "")) =', $number)
-            ->get()
-            ->row_array();
-
-        return $this->showCertificateOrInvalid($certificate, 'certificate_number', $number);
-    }
-
-    public function student_id()
-    {
-        $this->requirePost();
-
-        $studentId = trim((string) $this->input->post('student_id'));
-        if ($studentId === '') {
-            return $this->invalid('student_id', '', 'Enter a student ID to verify.');
+        $cadet = $this->cadet_model->findPublic($departmentId, $cadetNumber, $dateOfBirth);
+        if (! $cadet) {
+            return $this->invalid($departmentId, $cadetNumber, $dateOfBirth);
         }
 
-        $query = $this->certificateQuery()->where('UPPER(certificates.student_identifier_snapshot)', strtoupper($studentId));
-        if ($this->input->post('institution_id')) {
-            $query->where('certificates.institution_id', (int) $this->input->post('institution_id'));
-        }
-
-        $matches = $query->limit(26)->get()->result_array();
-        if (count($matches) === 1) {
-            return $this->showCertificateOrInvalid($matches[0], 'student_id', $studentId);
-        }
-
-        return $this->showCandidatesOrInvalid($matches, 'student_id', $studentId);
-    }
-
-    public function student_name()
-    {
-        $this->requirePost();
-        if (! $this->captchaIsValid($this->input->post('captcha'), 'name')) {
-            return $this->invalid('student_name', $this->input->post('student_name'), 'The verification code did not match.');
-        }
-
-        $name = preg_replace('/\s+/', ' ', trim((string) $this->input->post('student_name')));
-        $institutionId = (int) $this->input->post('institution_id');
-        $issueYear = trim((string) $this->input->post('issue_year'));
-        $certificateType = trim((string) $this->input->post('certificate_type'));
-
-        if (strlen($name) < 3) {
-            return $this->invalid('student_name', $name, 'Enter at least 3 characters of the student name.');
-        }
-
-        if (! $institutionId && $issueYear === '' && $certificateType === '') {
-            return $this->invalid('student_name', $name, 'Use an institution, issue year, or certificate type with name search.');
-        }
-
-        $query = $this->certificateQuery()
-            ->group_start()
-            ->where('UPPER(certificates.student_name_snapshot)', strtoupper($name))
-            ->or_like('UPPER(certificates.student_name_snapshot)', strtoupper($name), 'after')
-            ->group_end();
-
-        if ($institutionId) {
-            $query->where('certificates.institution_id', $institutionId);
-        }
-        if ($issueYear !== '') {
-            $query->where('YEAR(certificates.issue_date)', (int) $issueYear);
-        }
-        if ($certificateType !== '') {
-            $query->like('certificate_types.name', $certificateType);
-        }
-
-        $matches = $query->limit(26)->get()->result_array();
-        if (count($matches) === 1) {
-            return $this->showCertificateOrInvalid($matches[0], 'student_name', $name);
-        }
-
-        return $this->showCandidatesOrInvalid($matches, 'student_name', $name);
+        $status = $cadet['status'] === Cadet_model::STATUS_SUSPENDED ? 'suspended' : 'valid';
+        $this->cadet_model->logVerification($cadet, $departmentId, $cadetNumber, $dateOfBirth, $status);
+        $this->showResult($cadet);
     }
 
     public function qr($token = '')
     {
         $token = trim((string) $token);
-        if ($token === '' || ! preg_match('/^[A-Za-z0-9_\-\.]{16,200}$/', $token)) {
-            return $this->invalid('qr', $token, null, 'invalid_token');
+        if ($token === '' || ! preg_match('/^[A-Za-z0-9_-]{32,100}$/', $token)) {
+            return $this->invalid(null, '', '', 'invalid_token');
+        }
+        if ($this->isRateLimited()) {
+            return $this->invalid(null, '', '', 'rate_limited');
         }
 
-        $tokenHash = hash('sha256', $token);
-        $certificate = $this->certificateQuery()
-            ->join('certificate_qr_tokens', 'certificate_qr_tokens.certificate_id = certificates.id')
-            ->where('certificate_qr_tokens.token_hash', $tokenHash)
-            ->where('certificate_qr_tokens.status', 'active')
-            ->get()
-            ->row_array();
+        $cadet = $this->cadet_model->findByQrToken($token);
+        if (! $cadet) {
+            $this->cadet_model->logVerification(null, null, $token, '', 'invalid_token', 'qr');
+            return $this->render('verification_invalid');
+        }
 
-        return $this->showCertificateOrInvalid($certificate, 'qr', $tokenHash, null, 'invalid_token');
+        $status = $cadet['status'] === Cadet_model::STATUS_SUSPENDED ? 'suspended' : 'valid';
+        $this->cadet_model->logVerification($cadet, $cadet['department_id'], $cadet['cadet_number'], '', $status, 'qr');
+        $this->showResult($cadet);
     }
 
     public function result($uuid = '')
     {
-        $certificate = $this->certificateQuery()->where('certificates.uuid', $uuid)->get()->row_array();
-        return $this->showCertificateOrInvalid($certificate, 'manual_url', $uuid);
+        $cadet = $this->cadet_model->find($uuid);
+        if (! $cadet || ! in_array($cadet['status'], [Cadet_model::STATUS_PUBLISHED, Cadet_model::STATUS_SUSPENDED], true)) {
+            return $this->render('verification_invalid');
+        }
+        $this->showResult($cadet);
     }
 
     public function print_receipt($uuid = '')
     {
-        $certificate = $this->certificateQuery()->where('certificates.uuid', $uuid)->get()->row_array();
-        if (! $certificate || ! in_array($certificate['status'], $this->publicStatuses, true)) {
+        $cadet = $this->cadet_model->find($uuid);
+        if (! $cadet || ! in_array($cadet['status'], [Cadet_model::STATUS_PUBLISHED, Cadet_model::STATUS_SUSPENDED], true)) {
             show_404();
         }
+        $this->load->view('frontend/' . $this->theme . '/verification_print', $this->baseData([
+            'cadet' => $cadet,
+            'verified_at' => date('Y-m-d H:i:s'),
+            'page_title' => 'Verification Receipt',
+        ]));
+    }
 
-        $data = $this->baseData(['certificate' => $certificate, 'page_title' => 'Verification Receipt']);
-        $this->load->view('frontend/' . $this->theme . '/verification_print', $data);
+    public function photo($uuid = '')
+    {
+        $cadet = $this->cadet_model->find($uuid);
+        if (! $cadet || empty($cadet['photo_thumbnail_path']) || ! in_array($cadet['status'], [Cadet_model::STATUS_PUBLISHED, Cadet_model::STATUS_SUSPENDED], true)) {
+            show_404();
+        }
+        $this->streamPrivateFile($cadet['photo_thumbnail_path'], 'image/jpeg', 'cadet-photo.jpg');
+    }
+
+    public function document($uuid = '')
+    {
+        if (! config_item('cadet_public_document_viewing')) {
+            show_404();
+        }
+        $document = $this->db
+            ->select('cadet_documents.*, cadets.status AS cadet_status')
+            ->from('cadet_documents')
+            ->join('cadets', 'cadets.id = cadet_documents.cadet_id')
+            ->where('cadet_documents.uuid', $uuid)
+            ->where('cadet_documents.status', 'active')
+            ->where('cadets.status', Cadet_model::STATUS_PUBLISHED)
+            ->get()
+            ->row_array();
+        if (! $document) {
+            show_404();
+        }
+        $this->streamPrivateFile($document['path'], $document['mime_type'], $document['original_filename']);
     }
 
     public function captcha()
     {
-        $scope = strtolower((string) $this->input->get('scope'));
-        if (! in_array($scope, ['certificate', 'name'], true)) {
-            $scope = 'certificate';
-        }
-
         $code = (string) random_int(10000, 99999);
-        $this->session->set_userdata('verification_captcha_' . $scope, $code);
+        $this->session->set_userdata('cadet_verification_captcha', $code);
 
         $image = imagecreatetruecolor(150, 46);
         $background = imagecolorallocate($image, 247, 250, 252);
-        $brand = imagecolorallocate($image, 0, 166, 62);
-        $muted = imagecolorallocate($image, 113, 128, 150);
+        $brand = imagecolorallocate($image, 0, 120, 50);
+        $muted = imagecolorallocate($image, 125, 137, 130);
         imagefilledrectangle($image, 0, 0, 150, 46, $background);
-        for ($i = 0; $i < 6; $i++) {
+        for ($i = 0; $i < 7; $i++) {
             imageline($image, random_int(0, 150), random_int(0, 46), random_int(0, 150), random_int(0, 46), $muted);
         }
         imagestring($image, 5, 47, 14, $code, $brand);
-
         header('Content-Type: image/png');
         header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
         imagepng($image);
         imagedestroy($image);
     }
 
-    private function certificateQuery()
+    // Legacy URLs now return to the single authoritative cadet verification form.
+    public function certificate() { redirect('/'); }
+    public function student_id() { redirect('/'); }
+    public function student_name() { redirect('/'); }
+
+    private function showResult($cadet)
     {
-        return $this->db
-            ->select('certificates.*, institutions.name as institution_name, institutions.short_code as institution_code, certificate_types.name as certificate_type_name, programs.name as program_name')
-            ->from('certificates')
-            ->join('institutions', 'institutions.id = certificates.institution_id')
-            ->join('certificate_types', 'certificate_types.id = certificates.certificate_type_id')
-            ->join('programs', 'programs.id = certificates.program_id', 'left')
-            ->where_in('certificates.status', $this->publicStatuses)
-            ->where('certificates.public_visibility !=', 'hidden');
-    }
-
-    private function showCertificateOrInvalid($certificate, $type, $input, $message = null, $invalidStatus = 'not_found')
-    {
-        if (! $certificate) {
-            return $this->invalid($type, $input, $message, $invalidStatus);
-        }
-
-        $this->logVerification($certificate['id'], $certificate['institution_id'], $type, $input, $certificate['status']);
-
         $this->render('verification_result', [
-            'certificate' => $certificate,
+            'cadet' => $cadet,
             'verified_at' => date('Y-m-d H:i:s'),
+            'documents_complete' => count(array_filter($cadet['documents'], static function ($document) {
+                return ! empty($document['id']) && $document['status'] === 'active';
+            })) === 4,
         ]);
     }
 
-    private function showCandidatesOrInvalid($matches, $type, $input)
+    private function invalid($departmentId = null, $cadetNumber = '', $dateOfBirth = '', $status = 'not_found', $message = null)
     {
-        if (! $matches) {
-            return $this->invalid($type, $input);
-        }
-
-        if (count($matches) > 25) {
-            return $this->invalid($type, $input, 'Too many possible matches. Add more specific details and try again.');
-        }
-
-        $this->logVerification(null, null, $type, $input, 'candidate_list');
-        $this->render('verification_candidates', ['matches' => $matches]);
-    }
-
-    private function invalid($type, $input, $message = null, $resultStatus = 'not_found')
-    {
-        $this->logVerification(null, null, $type, (string) $input, $resultStatus);
+        $this->cadet_model->logVerification(null, $departmentId, (string) $cadetNumber, (string) $dateOfBirth, $status);
         $this->render('verification_invalid', ['message' => $message]);
     }
 
-    private function logVerification($certificateId, $institutionId, $type, $input, $status)
+    private function isRateLimited()
     {
-        if (! $this->db->table_exists('verification_logs')) {
-            return;
-        }
-
-        $this->db->insert('verification_logs', [
-            'certificate_id' => $certificateId,
-            'institution_id' => $institutionId,
-            'verification_type' => $type,
-            'input_hash' => $input === '' ? null : hash('sha256', strtoupper((string) $input)),
-            'result_status' => $status,
-            'ip_address' => $this->input->ip_address(),
-            'user_agent' => substr((string) $this->input->user_agent(), 0, 500),
-            'referer' => substr((string) $this->input->server('HTTP_REFERER'), 0, 255),
-            'verified_at' => date('Y-m-d H:i:s'),
-        ]);
+        $windowStart = date('Y-m-d H:i:s', time() - 600);
+        $attempts = $this->db
+            ->where('ip_address', $this->input->ip_address())
+            ->where('verified_at >=', $windowStart)
+            ->count_all_results('cadet_verification_logs');
+        return $attempts >= (int) config_item('cadet_verification_rate_limit');
     }
 
-    private function captchaIsValid($value, $scope)
+    private function captchaIsValid($value)
     {
-        $sessionKey = 'verification_captcha_' . $scope;
-        $expected = (string) $this->session->userdata($sessionKey);
-        $this->session->unset_userdata($sessionKey);
+        $expected = (string) $this->session->userdata('cadet_verification_captcha');
+        $this->session->unset_userdata('cadet_verification_captcha');
         return $expected !== '' && hash_equals($expected, trim((string) $value));
     }
 
-    private function normalizeCertificateNumber($value)
+    private function verificationFormToken()
     {
-        return strtoupper(str_replace([' ', '-', '/'], '', trim((string) $value)));
+        $token = $this->session->userdata('verification_form_token');
+        if (! $token) {
+            $token = bin2hex(random_bytes(32));
+            $this->session->set_userdata('verification_form_token', $token);
+        }
+        return $token;
     }
 
     private function requirePost()
@@ -281,12 +241,21 @@ class Verification extends CI_Controller
         return $data;
     }
 
-    public function mask($value)
+    private function streamPrivateFile($relative, $mime, $filename)
     {
-        $value = (string) $value;
-        if (strlen($value) <= 6) {
-            return str_repeat('*', max(strlen($value) - 2, 1)) . substr($value, -2);
+        $relative = str_replace(['..', '\\'], ['', '/'], ltrim((string) $relative, '/'));
+        $absolute = $this->storageRoot . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $relative);
+        $root = realpath($this->storageRoot);
+        $parent = realpath(dirname($absolute));
+        if (! $root || ! $parent || strpos($parent, $root) !== 0 || ! is_file($absolute)) {
+            show_404();
         }
-        return substr($value, 0, 4) . '-****-' . substr($value, -4);
+        $this->output
+            ->set_header('X-Content-Type-Options: nosniff')
+            ->set_header('Cache-Control: private, no-store, max-age=0')
+            ->set_header('Content-Disposition: inline; filename="' . str_replace('"', '', basename($filename)) . '"')
+            ->set_header('Content-Type: ' . $mime)
+            ->set_header('Content-Length: ' . filesize($absolute))
+            ->set_output(file_get_contents($absolute));
     }
 }

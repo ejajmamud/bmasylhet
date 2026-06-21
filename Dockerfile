@@ -15,6 +15,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 COPY docker/apache-site.conf /etc/apache2/sites-available/000-default.conf
+COPY docker/php-upload.ini /usr/local/etc/php/conf.d/bma-upload.ini
 COPY . /var/www/html
 COPY uploads /opt/app-uploads
 COPY docker/entrypoint.sh /usr/local/bin/bma-entrypoint
@@ -27,6 +28,7 @@ RUN chmod +x /usr/local/bin/bma-entrypoint \
         /var/www/html/uploads
 
 ENV CI_ENV=production
+ENV CADET_PRIVATE_STORAGE=/var/www/private/cadet-documents
 
 EXPOSE 80
 
