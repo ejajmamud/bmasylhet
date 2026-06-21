@@ -15,7 +15,9 @@
 <link href="<?php echo base_url('assets/backend/css/icons.min.css'); ?>" rel="stylesheet" type="text/css" />
 
 <link href="<?php echo base_url('assets/backend/css/main.css') ?>" rel="stylesheet" type="text/css" />
-<link href="<?php echo base_url('assets/backend/css/bma-government.css') ?>" rel="stylesheet" type="text/css" />
+<?php if (get_portal_theme() === 'govt_green'): ?>
+    <link href="<?php echo base_url('assets/backend/css/bma-government.css') ?>" rel="stylesheet" type="text/css" />
+<?php endif; ?>
 
 <!-- font awesome 5 -->
 <link href="<?php echo base_url('assets/backend/css/fontawesome-all.min.css') ?>" rel="stylesheet" type="text/css" />

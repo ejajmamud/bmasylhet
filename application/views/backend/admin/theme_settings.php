@@ -1,114 +1,103 @@
 <?php
-$curl_enabled = function_exists('curl_version');
-$installed_themes = $this->crud_model->get_installed_themes();
-$uninstalled_themes = $this->crud_model->get_uninstalled_themes();
+    $active_theme = get_portal_theme();
+    $themes = [
+        'govt_green' => [
+            'name' => 'Govt_Green',
+            'description' => 'Government-inspired maritime portal with green overlay, bilingual EN/BN support, and matching login and dashboard surfaces.',
+            'preview' => base_url('assets/global/theme-previews/govt-green.png'),
+        ],
+        'academy_default' => [
+            'name' => 'Academy_Default',
+            'description' => 'Original Academy LMS frontend, login, and dashboard presentation retained as a working fallback.',
+            'preview' => base_url('assets/frontend/default-new/preview.png'),
+        ],
+    ];
 ?>
 
-
-<div class="row ">
-  <div class="col-xl-12">
-    <div class="card">
-      <div class="card-body">
-        <h4 class="page-title"> <i class="mdi mdi-apple-keyboard-command title_icon"></i> <?php echo get_phrase('theme_settings'); ?>
-          <a href="https://academy-lms.com/themes" target="_blank" class="btn btn-outline-primary btn-rounded alignToTitle ml-3"> <i class="mdi mdi-cart"></i> <?php echo get_phrase('buy_new_theme'); ?></a>
-          <a href="javascript:;" onclick="showAjaxModal('<?php echo site_url('admin/upload_theme') ?>', '<?php echo get_phrase('upload_your_theme_file'); ?>');" class="btn btn-outline-primary btn-rounded alignToTitle"> <i class="mdi mdi-upload"></i> <?php echo get_phrase('upload_your_theme_file'); ?></a>
-        </h4>
-      </div> <!-- end card body-->
-    </div> <!-- end card -->
-  </div><!-- end col-->
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="page-title"><i class="mdi mdi-palette title_icon"></i> System Themes</h4>
+                <p class="text-muted mb-0 mt-2">A system theme controls the public portal, staff login, and authenticated dashboards together.</p>
+            </div>
+        </div>
+    </div>
 </div>
-
-<!-- It will show list of uninstalled themes for installing as an alert -->
-<?php foreach ($uninstalled_themes as $key => $uninstalled_theme) : ?>
-  <div class="alert alert-info new-theme-alert" role="alert">
-    <i class="dripicons-information mr-2"></i> <strong><?php echo ucfirst(substr($uninstalled_theme, 0, -4)); ?></strong> <?php echo get_phrase('theme_is_showed_up') . '. ' . get_phrase('hit_the_install_button_for_installing'); ?>.
-    <a href="<?php echo site_url('admin/install_theme/' . $uninstalled_theme); ?>" class="btn btn-primary btn-rounded float-right"><?php echo get_phrase('install') . ' ' . ucfirst(substr($uninstalled_theme, 0, -4)) . ' ' . get_phrase('theme'); ?></a>
-  </div>
-<?php endforeach; ?>
-
 
 <div class="row">
-  <div class="col-lg-12">
-    <div class="card">
-      <div class="card-body">
-
-        <h4 class="header-title mb-3"><?php echo get_phrase('installed_themes'); ?></h4>
-
-        <!-- <ul class="nav nav-tabs nav-bordered mb-3">
-          <li class="nav-item">
-            <a href="#installed_themes" data-toggle="tab" aria-expanded="false" class="nav-link active">
-              <i class="mdi mdi-home-variant d-lg-none d-block mr-1"></i>
-              <span class="d-none d-lg-block"><?php echo get_phrase('installed_themes'); ?></span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="#premium_themes" data-toggle="tab" aria-expanded="true" class="nav-link">
-              <i class="mdi mdi-account-circle d-lg-none d-block mr-1"></i>
-              <span class="d-none d-lg-block"><?php echo get_phrase('add_new_themes'); ?></span>
-            </a>
-          </li>
-        </ul> -->
-
-        <div class="tab-content">
-          <div class="tab-pane show active" id="installed_themes">
-            <div class="row">
-              <?php foreach ($installed_themes as $key => $installed_theme) : ?>
-                <div class="col-xl-4">
-                  <div class="card-deck-wrapper">
-                    <div class="card-deck">
-                      <div class="card d-block">
-                        <img class="card-img-top" src="<?php echo base_url('assets/frontend/' . $installed_theme . '/preview.png'); ?>" alt="Card image cap">
-                        <div class="card-body">
-                          <h5 class="card-title"><?php echo ucfirst($installed_theme); ?></h5>
-                          <div class="">
-                            <?php if (get_frontend_settings('theme') == $installed_theme) : ?>
-                              <a href="javascript:;" class="btn btn-icon btn-success col" id="" style="" style="margin-right:5px;">
-                                <i class="mdi mdi-home"></i> <?php echo get_phrase('active_theme'); ?>
-                              </a>
-                            <?php else : ?>
-                              <a href="javascript:;" class="btn btn-icon btn-secondary col-5" id="" style="" style="margin-right:5px;" onclick="activate_theme('<?php echo $installed_theme; ?>')">
-                                <i class="mdi mdi-shield-check"></i> <?php echo get_phrase('activate'); ?>
-                              </a>
-                              <a href="javascript:;" class="btn btn-icon btn-secondary float-right col-5" id="" style="" style="margin-right:5px;" onclick="confirm_modal('<?php echo site_url('admin/theme_actions/remove/' . $installed_theme); ?>');">
-                                <i class="mdi mdi-alert-octagram"></i> <?php echo get_phrase('remove'); ?>
-                              </a>
-                            <?php endif; ?>
-                          </div>
-                        </div>
-                      </div>
+    <?php foreach ($themes as $theme_key => $theme): ?>
+        <div class="col-xl-6 col-lg-6">
+            <div class="card h-100 bma-theme-card<?php echo $active_theme === $theme_key ? ' bma-theme-active' : ''; ?>">
+                <img class="card-img-top bma-theme-preview" src="<?php echo html_escape($theme['preview']); ?>" alt="<?php echo html_escape($theme['name']); ?> preview">
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="card-title mb-0"><?php echo html_escape($theme['name']); ?></h5>
+                        <?php if ($active_theme === $theme_key): ?>
+                            <span class="badge badge-success">Active</span>
+                        <?php endif; ?>
                     </div>
-                  </div>
+                    <p class="text-muted flex-grow-1"><?php echo html_escape($theme['description']); ?></p>
+                    <?php if ($active_theme === $theme_key): ?>
+                        <button class="btn btn-success btn-block" type="button" disabled>
+                            <i class="mdi mdi-check-circle"></i> Active Theme
+                        </button>
+                    <?php else: ?>
+                        <button class="btn btn-primary btn-block" type="button" onclick="activatePortalTheme('<?php echo html_escape($theme_key); ?>', this)">
+                            <i class="mdi mdi-palette"></i> Activate <?php echo html_escape($theme['name']); ?>
+                        </button>
+                    <?php endif; ?>
                 </div>
-              <?php endforeach; ?>
             </div>
-          </div>
-          <!--new themes-->
         </div>
-
-      </div> <!-- end card-body-->
-    </div> <!-- end card-->
-  </div>
+    <?php endforeach; ?>
 </div>
 
-<script type="text/javascript">
-  function activate_theme(theme) {
+<style>
+    .bma-theme-card {
+        overflow: hidden;
+        transition: border-color .2s ease, box-shadow .2s ease;
+    }
+    .bma-theme-active {
+        border: 2px solid #00a63e !important;
+    }
+    .bma-theme-preview {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        object-fit: cover;
+        object-position: top;
+        background: #eef3ef;
+        border-bottom: 1px solid #d4ddd7;
+    }
+</style>
+
+<script>
+function activatePortalTheme(theme, button) {
+    var original = button.innerHTML;
+    button.disabled = true;
+    button.innerHTML = '<span class="spinner-border spinner-border-sm mr-1" role="status" aria-hidden="true"></span> Activating';
+
     $.ajax({
-      url: '<?php echo site_url('admin/theme_actions/activate/'); ?>'+theme,
-      type: 'POST',
-      data: {
-        theme: theme
-      },
-      success: function(response) {
-        if (response) {
-          success_notify(theme.toUpperCase() + ' <?php echo get_phrase('theme_successfully_activated') ?>');
-          setTimeout(
-            function() {
-              location.reload();
-            }, 1000);
-        } else {
-          error_notify('<?php echo get_phrase('you_do_not_have_right_to_access_this_theme'); ?>');
+        url: '<?php echo site_url('admin/portal_theme/activate'); ?>',
+        type: 'POST',
+        data: { theme: theme },
+        success: function (response) {
+            if (response) {
+                success_notify('Theme successfully activated');
+                window.setTimeout(function () {
+                    window.location.reload();
+                }, 700);
+            } else {
+                button.disabled = false;
+                button.innerHTML = original;
+                error_notify('Theme could not be activated');
+            }
+        },
+        error: function () {
+            button.disabled = false;
+            button.innerHTML = original;
+            error_notify('Theme could not be activated');
         }
-      }
     });
-  }
+}
 </script>

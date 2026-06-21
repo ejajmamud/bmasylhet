@@ -31,7 +31,11 @@
          this.$body = o("body"), this.charts = []
      };
      t.prototype.respChart = function(r, a, n, e) {
+         <?php if (get_portal_theme() === 'govt_green'): ?>
          Chart.defaults.global.defaultFontColor = "#667069", Chart.defaults.scale.gridLines.color = "#d4ddd7";
+         <?php else: ?>
+         Chart.defaults.global.defaultFontColor = "#8391a2", Chart.defaults.scale.gridLines.color = "#8391a2";
+         <?php endif; ?>
          var i = r.get(0).getContext("2d"),
              s = o(r).parent();
          return function() {
@@ -64,8 +68,8 @@
                  ],
                  datasets: [{
                      label: "<?php echo get_phrase('this_year'); ?>",
-                     backgroundColor: "rgba(0, 166, 62, 0.18)",
-                     borderColor: "#00a63e",
+                     backgroundColor: "<?php echo get_portal_theme() === 'govt_green' ? 'rgba(0, 166, 62, 0.18)' : 'rgba(114, 124, 245, 0.3)'; ?>",
+                     borderColor: "<?php echo get_portal_theme() === 'govt_green' ? '#00a63e' : '#727cf5'; ?>",
                      data: [
                          <?php foreach ($month_wise_income as $income): ?>
                         "<?php echo $income; ?>",
@@ -117,7 +121,7 @@
                  labels: ["<?php echo get_phrase('active_course'); ?>", "<?php echo get_phrase('pending_course'); ?>"],
                  datasets: [{
                      data: [<?php echo $number_of_active_course; ?>, <?php echo $number_of_pending_course; ?>],
-                     backgroundColor: ["#00a63e", "#FFC107"],
+                     backgroundColor: ["<?php echo get_portal_theme() === 'govt_green' ? '#00a63e' : '#0acf97'; ?>", "#FFC107"],
                      borderColor: "transparent",
                      borderWidth: "2"
                  }]
@@ -132,7 +136,7 @@
          return t
      }, t.prototype.init = function() {
          var r = this;
-         Chart.defaults.global.defaultFontFamily = '"Noto Sans",Arial,sans-serif', r.charts = this.initCharts(), o(window).on("resize", function(t) {
+         Chart.defaults.global.defaultFontFamily = <?php echo get_portal_theme() === 'govt_green' ? '\'"Noto Sans",Arial,sans-serif\'' : '\'-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif\''; ?>, r.charts = this.initCharts(), o(window).on("resize", function(t) {
              o.each(r.charts, function(t, r) {
                  try {
                      r.destroy()

@@ -366,6 +366,14 @@ if (!function_exists('get_frontend_settings')) {
     }
 }
 
+if (!function_exists('get_portal_theme')) {
+    function get_portal_theme()
+    {
+        $theme = get_frontend_settings('portal_theme');
+        return in_array($theme, ['govt_green', 'academy_default'], true) ? $theme : 'govt_green';
+    }
+}
+
 if (!function_exists('get_current_banner')) {
     function get_current_banner($key = '')
     {

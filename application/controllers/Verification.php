@@ -25,6 +25,10 @@ class Verification extends CI_Controller
 
     public function index()
     {
+        if (get_portal_theme() === 'academy_default') {
+            redirect(site_url('home'), 'refresh');
+        }
+
         $this->render('verification_home', [
             'institutions' => $this->db->order_by('name', 'ASC')->get('institutions')->result_array(),
         ]);

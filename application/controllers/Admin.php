@@ -871,6 +871,35 @@ class Admin extends CI_Controller
         }
     }
 
+    public function portal_theme($action = '')
+    {
+        if ($this->session->userdata('admin_login') != true) {
+            redirect(site_url('login'), 'refresh');
+        }
+
+        check_permission('theme');
+
+        if ($action !== 'activate') {
+            show_404();
+        }
+
+        $theme = strtolower((string) $this->input->post('theme'));
+        if (! in_array($theme, ['govt_green', 'academy_default'], true)) {
+            $this->output->set_status_header(422);
+            echo false;
+            return;
+        }
+
+        $exists = $this->db->where('key', 'portal_theme')->get('frontend_settings')->num_rows() > 0;
+        if ($exists) {
+            $this->db->where('key', 'portal_theme')->update('frontend_settings', ['value' => $theme]);
+        } else {
+            $this->db->insert('frontend_settings', ['key' => 'portal_theme', 'value' => $theme]);
+        }
+
+        echo true;
+    }
+
     public function courses()
     {
         if ($this->session->userdata('admin_login') != true) {
@@ -4442,7 +4471,6 @@ $developer_html
                     // Home page builder
 
                     }
-
 
 
 
