@@ -1,0 +1,26 @@
+# Operating system and editor files
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
+
+# Runtime output
+application/cache/*
+!application/cache/index.html
+application/logs/*
+!application/logs/index.html
+application/sessions/*
+application/libraries/phpqrcode/cache/*
+
+# Local archives and generated backups
+Academy-LMS.zip
+backups/*
+!backups/.gitkeep
+*.log
+*.pid
+
+# Local environment files
+.env
+.env.*
+php.ini
