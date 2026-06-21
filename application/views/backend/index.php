@@ -13,6 +13,12 @@
     <?php include 'metas.php'; ?>
     <!-- all the css files -->
     <?php include 'includes_top.php'; ?>
+    <style>
+        :root {
+            --bma-govt-background: url('<?php echo portal_asset('portal_govt_background', 'assets/global/logo/login_left_bg.png'); ?>');
+            --bma-academy-background: url('<?php echo portal_asset('portal_academy_background', 'assets/global/logo/academy-default-bg.jpeg'); ?>');
+        }
+    </style>
 </head>
 <body data-layout="detached" class="<?php echo get_portal_theme() === 'govt_green' ? 'bma-dashboard' : 'bma-academy-dashboard'; ?>">
     <!-- HEADER -->

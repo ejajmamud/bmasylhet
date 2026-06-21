@@ -634,6 +634,22 @@ class Admin extends CI_Controller
         // CHECK ACCESS PERMISSION
         check_permission('settings');
 
+        if ($param1 == 'portal_update') {
+            $this->crud_model->update_portal_settings();
+            $this->session->set_flashdata('flash_message', 'Portal content updated successfully.');
+            redirect(site_url('admin/frontend_settings?tab=portal_content'), 'refresh');
+        }
+
+        if ($param1 == 'portal_assets') {
+            try {
+                $this->crud_model->update_portal_assets();
+                $this->session->set_flashdata('flash_message', 'Portal logos and backgrounds updated successfully.');
+            } catch (RuntimeException $exception) {
+                $this->session->set_flashdata('error_message', $exception->getMessage());
+            }
+            redirect(site_url('admin/frontend_settings?tab=portal_assets'), 'refresh');
+        }
+
         if ($param1 == 'frontend_update') {
             $this->crud_model->update_frontend_settings();
             $this->session->set_flashdata('flash_message', get_phrase('frontend_settings_updated'));
@@ -4471,7 +4487,6 @@ $developer_html
                     // Home page builder
 
                     }
-
 
 
 

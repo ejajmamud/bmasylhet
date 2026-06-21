@@ -266,15 +266,15 @@ class Verification extends CI_Controller
     {
         $this->load->view('frontend/' . $this->theme . '/verification_shell', $this->baseData($data + [
             'inner_view' => $innerView,
-            'page_title' => 'Certificate Verification',
+            'page_title' => get_settings('system_title') ?: 'Certificate Verification System',
         ]));
     }
 
     private function baseData($data = [])
     {
-        $data['official_name'] = 'Bangladesh Marine Academy Sylhet';
+        $data['official_name'] = get_settings('system_name') ?: 'Bangladesh Marine Academy Sylhet';
         $data['brand_color'] = '#00A63E';
-        $data['support_email'] = 'ejajjoy3@gmail.com';
+        $data['support_email'] = get_settings('system_email') ?: 'ejajjoy3@gmail.com';
         $data['language_code'] = in_array($this->session->userdata('verification_language'), ['en', 'bn'], true)
             ? $this->session->userdata('verification_language')
             : 'en';

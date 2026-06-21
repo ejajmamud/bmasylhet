@@ -127,7 +127,7 @@ body.bma-academy-dashboard {
 .bma-academy-dashboard .leftbar-user {
     background-image:
         linear-gradient(rgba(10, 35, 66, .82), rgba(23, 58, 104, .84)),
-        url("../../global/logo/academy-default-bg.jpeg");
+        var(--bma-academy-background, url("../../global/logo/academy-default-bg.jpeg"));
     background-position: center;
     background-size: cover;
     border-radius: 4px 4px 0 0;

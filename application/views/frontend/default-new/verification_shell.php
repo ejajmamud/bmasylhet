@@ -5,9 +5,13 @@
     $is_bengali = $language_code === 'bn';
     $portal_theme = get_portal_theme();
     $is_academy_theme = $portal_theme === 'academy_default';
-    $tr = static function ($english, $bengali) use ($is_bengali) {
-        return $is_bengali ? $bengali : $english;
+    $tr = static function ($key) use ($language_code) {
+        return portal_text($key, $language_code);
     };
+    $government_logo = portal_asset('portal_govt_logo', 'assets/global/logo/bangladesh_logo.png');
+    $academy_logo = portal_asset('portal_academy_logo', 'assets/global/logo/BMA.png');
+    $govt_background = portal_asset('portal_govt_background', 'assets/global/logo/login_left_bg.png');
+    $academy_background = portal_asset('portal_academy_background', 'assets/global/logo/academy-default-bg.jpeg');
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo html_escape($language_code); ?>" dir="<?php echo $language_dir; ?>">
@@ -15,7 +19,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5.0">
-    <title><?php echo html_escape($page_title); ?> | <?php echo html_escape($official_name); ?></title>
+    <title><?php echo html_escape($page_title); ?><?php echo $page_title === get_settings('system_title') ? '' : ' | ' . html_escape($official_name); ?></title>
     <link rel="icon" href="<?php echo base_url('uploads/system/' . get_frontend_settings('favicon')); ?>" type="image/x-icon">
     <?php include 'includes_top.php'; ?>
     <style>
@@ -125,7 +129,7 @@
             isolation: isolate;
             display: flex;
             align-items: center;
-            background-image: url('<?php echo base_url('assets/global/logo/login_left_bg.png'); ?>');
+            background-image: url('<?php echo html_escape($govt_background); ?>');
             background-position: center;
             background-size: cover;
             border-bottom: 4px solid var(--bma-focus);
@@ -513,7 +517,7 @@
         }
         .bma-hero {
             min-height: calc(100vh - 80px);
-            background-image: url('<?php echo base_url('assets/global/logo/academy-default-bg.jpeg'); ?>');
+            background-image: url('<?php echo html_escape($academy_background); ?>');
             background-position: center;
             background-size: cover;
             border-bottom: 4px solid #4f79b9;
@@ -574,7 +578,7 @@
 <body class="<?php echo $is_academy_theme ? 'academy-default-theme' : 'govt-green-theme'; ?>">
     <div class="bma-topbar py-2">
         <div class="container d-flex flex-wrap justify-content-between gap-2">
-            <span><?php echo html_escape($tr("Government of the People's Republic of Bangladesh", 'গণপ্রজাতন্ত্রী বাংলাদেশ সরকার')); ?></span>
+            <span><?php echo html_escape($tr('government_name')); ?></span>
             <span class="bma-topbar-email"><?php echo html_escape($support_email); ?></span>
         </div>
     </div>
@@ -584,14 +588,14 @@
             <a href="<?php echo site_url('/'); ?>" class="d-flex align-items-center gap-3 text-decoration-none text-white">
                 <img
                     class="bma-logo"
-                    src="<?php echo base_url($is_academy_theme ? 'assets/global/logo/BMA.png' : 'assets/global/logo/bangladesh_logo.png'); ?>"
+                    src="<?php echo html_escape($is_academy_theme ? $academy_logo : $government_logo); ?>"
                     alt="<?php echo html_escape($is_academy_theme ? 'Bangladesh Marine Academy Sylhet logo' : 'Bangladesh Government logo'); ?>"
                     width="<?php echo $is_academy_theme ? '70' : '58'; ?>"
                     height="<?php echo $is_academy_theme ? '62' : '58'; ?>"
                 >
                 <span>
-                    <strong class="d-block fs-6"><?php echo html_escape($tr('Bangladesh Marine Academy Sylhet', 'বাংলাদেশ মেরিন একাডেমি, সিলেট')); ?></strong>
-                    <small class="text-white"><?php echo html_escape($tr('Certificate Verification System', 'সনদপত্র যাচাইকরণ ব্যবস্থা')); ?></small>
+                    <strong class="d-block fs-6"><?php echo html_escape($tr('institution_name')); ?></strong>
+                    <small class="text-white"><?php echo html_escape($tr('system_title')); ?></small>
                 </span>
             </a>
             <nav class="d-flex align-items-center gap-2">
@@ -599,9 +603,9 @@
                     <a class="<?php echo $language_code === 'en' ? 'active' : ''; ?>" href="<?php echo site_url('/?lang=en'); ?>" lang="en" hreflang="en">EN</a>
                     <a class="<?php echo $language_code === 'bn' ? 'active' : ''; ?>" href="<?php echo site_url('/?lang=bn'); ?>" lang="bn" hreflang="bn">BN</a>
                 </span>
-                <a class="btn btn-sm bma-outline" href="<?php echo site_url('/'); ?>"><?php echo html_escape($tr('Verify', 'সনদ যাচাই')); ?></a>
+                <a class="btn btn-sm bma-outline" href="<?php echo site_url('/'); ?>"><?php echo html_escape($tr('verify_button')); ?></a>
                 <?php if ($this->uri->segment(1) !== 'login'): ?>
-                    <a class="btn btn-sm btn-light border" href="<?php echo site_url('login'); ?>"><?php echo html_escape($tr('Staff Login', 'কর্মকর্তা লগইন')); ?></a>
+                    <a class="btn btn-sm btn-light border" href="<?php echo site_url('login'); ?>"><?php echo html_escape($tr('staff_login')); ?></a>
                 <?php endif; ?>
             </nav>
         </div>
@@ -614,11 +618,11 @@
     <footer class="bma-footer py-4">
         <div class="container d-flex flex-wrap justify-content-between gap-3">
             <div>
-                <strong><?php echo html_escape($tr('Bangladesh Marine Academy Sylhet', 'বাংলাদেশ মেরিন একাডেমি, সিলেট')); ?></strong>
-                <div class="small mt-1"><?php echo html_escape($tr('Only certificates published by an authorized institution can be verified on this portal.', 'অনুমোদিত কর্তৃপক্ষ কর্তৃক প্রকাশিত সনদসমূহ এই পোর্টালে যাচাই করা যাবে।')); ?></div>
+                <strong><?php echo html_escape($tr('institution_name')); ?></strong>
+                <div class="small mt-1"><?php echo html_escape($tr('footer_note')); ?></div>
             </div>
             <div class="small">
-                <?php echo html_escape($tr('Support', 'সহায়তা')); ?>: <a href="mailto:<?php echo html_escape($support_email); ?>"><?php echo html_escape($support_email); ?></a>
+                <?php echo html_escape($tr('support')); ?>: <a href="mailto:<?php echo html_escape($support_email); ?>"><?php echo html_escape($support_email); ?></a>
             </div>
         </div>
     </footer>

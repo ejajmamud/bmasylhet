@@ -5,27 +5,27 @@
         <?php if (get_portal_theme() === 'govt_green'): ?>
             <a href="<?php echo site_url($this->session->userdata('role')); ?>" class="topnav-logo bma-dashboard-brand">
                 <span class="topnav-logo-lg">
-                    <img src="<?php echo base_url('assets/global/logo/bangladesh_logo.png'); ?>" alt="Bangladesh Government logo" height="46">
+                    <img src="<?php echo portal_asset('portal_govt_logo', 'assets/global/logo/bangladesh_logo.png'); ?>" alt="Bangladesh Government logo" height="46">
                     <span class="bma-dashboard-brand-copy">
-                        <strong>Bangladesh Marine Academy Sylhet</strong>
-                        <small>Certificate Administration</small>
+                        <strong><?php echo html_escape(portal_text('institution_name', 'en')); ?></strong>
+                        <small><?php echo html_escape(portal_text('dashboard_subtitle', 'en')); ?></small>
                     </span>
                 </span>
                 <span class="topnav-logo-sm">
-                    <img src="<?php echo base_url('assets/global/logo/bangladesh_logo.png'); ?>" alt="Bangladesh Government logo" height="40">
+                    <img src="<?php echo portal_asset('portal_govt_logo', 'assets/global/logo/bangladesh_logo.png'); ?>" alt="Bangladesh Government logo" height="40">
                 </span>
             </a>
         <?php else: ?>
             <a href="<?php echo site_url($this->session->userdata('role')); ?>" class="topnav-logo bma-academy-brand">
                 <span class="topnav-logo-lg">
-                    <img src="<?php echo base_url('assets/global/logo/BMA.png'); ?>" alt="Bangladesh Marine Academy Sylhet logo" height="52">
+                    <img src="<?php echo portal_asset('portal_academy_logo', 'assets/global/logo/BMA.png'); ?>" alt="<?php echo html_escape(portal_text('institution_name', 'en')); ?> logo" height="52">
                     <span class="bma-academy-brand-copy">
-                        <strong>Bangladesh Marine Academy Sylhet</strong>
-                        <small>Certificate Administration</small>
+                        <strong><?php echo html_escape(portal_text('institution_name', 'en')); ?></strong>
+                        <small><?php echo html_escape(portal_text('dashboard_subtitle', 'en')); ?></small>
                     </span>
                 </span>
                 <span class="topnav-logo-sm">
-                    <img src="<?php echo base_url('assets/global/logo/BMA.png'); ?>" alt="Bangladesh Marine Academy Sylhet logo" height="44">
+                    <img src="<?php echo portal_asset('portal_academy_logo', 'assets/global/logo/BMA.png'); ?>" alt="<?php echo html_escape(portal_text('institution_name', 'en')); ?> logo" height="44">
                 </span>
             </a>
         <?php endif; ?>
@@ -278,9 +278,9 @@
         </a>
         <div class="visit_website">
             <?php if (get_portal_theme() === 'govt_green'): ?>
-                <a href="<?php echo site_url('/'); ?>" target="" class="btn btn-outline-light d-none d-md-inline-block">Public Verification Portal</a>
+                <a href="<?php echo site_url('/'); ?>" target="" class="btn btn-outline-light d-none d-md-inline-block"><?php echo html_escape(portal_text('portal_button', 'en')); ?></a>
             <?php else: ?>
-                <a href="<?php echo site_url('/'); ?>" class="btn btn-outline-primary d-none d-md-inline-block">Certificate Verification Portal</a>
+                <a href="<?php echo site_url('/'); ?>" class="btn btn-outline-primary d-none d-md-inline-block"><?php echo html_escape(portal_text('portal_button', 'en')); ?></a>
             <?php endif; ?>
         </div>
     </div>

@@ -33,13 +33,13 @@ class Login extends CI_Controller
         }
 
         $page_data['inner_view'] = 'verification_login';
-        $page_data['page_title'] = 'Staff Login';
-        $page_data['official_name'] = 'Bangladesh Marine Academy Sylhet';
-        $page_data['brand_color'] = '#00A63E';
-        $page_data['support_email'] = 'ejajjoy3@gmail.com';
         $page_data['language_code'] = in_array($this->session->userdata('verification_language'), ['en', 'bn'], true)
             ? $this->session->userdata('verification_language')
             : 'en';
+        $page_data['page_title'] = portal_text('staff_login', $page_data['language_code']);
+        $page_data['official_name'] = get_settings('system_name') ?: 'Bangladesh Marine Academy Sylhet';
+        $page_data['brand_color'] = '#00A63E';
+        $page_data['support_email'] = get_settings('system_email') ?: 'ejajjoy3@gmail.com';
         $this->load->view('frontend/' . get_frontend_settings('theme') . '/verification_shell', $page_data);
     }
 

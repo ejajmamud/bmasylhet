@@ -371,117 +371,22 @@ class Crud_model extends CI_Model
 
     public function update_system_settings()
     {
-        $data['value'] = html_escape($this->input->post('system_name'));
-        $this->db->where('key', 'system_name');
-        $this->db->update('settings', $data);
+        $keys = [
+            'system_name', 'system_title', 'system_email', 'phone', 'address',
+            'website_description', 'website_keywords', 'author', 'slogan',
+            'footer_text', 'footer_link', 'language', 'timezone',
+            'public_signup', 'allowed_device_number_of_loging',
+        ];
 
-        $data['value'] = html_escape($this->input->post('system_title'));
-        $this->db->where('key', 'system_title');
-        $this->db->update('settings', $data);
-
-        $data['value'] = html_escape($this->input->post('author'));
-        $this->db->where('key', 'author');
-        $this->db->update('settings', $data);
-
-        $data['value'] = html_escape($this->input->post('slogan'));
-        $this->db->where('key', 'slogan');
-        $this->db->update('settings', $data);
-
-        $data['value'] = html_escape($this->input->post('language'));
-        $this->db->where('key', 'language');
-        $this->db->update('settings', $data);
-
-        $data['value'] = html_escape($this->input->post('text_align'));
-        $this->db->where('key', 'text_align');
-        $this->db->update('settings', $data);
-
-        $data['value'] = html_escape($this->input->post('system_email'));
-        $this->db->where('key', 'system_email');
-        $this->db->update('settings', $data);
-
-        $data['value'] = html_escape($this->input->post('address'));
-        $this->db->where('key', 'address');
-        $this->db->update('settings', $data);
-
-        $data['value'] = html_escape($this->input->post('phone'));
-        $this->db->where('key', 'phone');
-        $this->db->update('settings', $data);
-
-        $data['value'] = html_escape($this->input->post('youtube_api_key'));
-        $this->db->where('key', 'youtube_api_key');
-        $this->db->update('settings', $data);
-
-        $data['value'] = html_escape($this->input->post('vimeo_api_key'));
-        $this->db->where('key', 'vimeo_api_key');
-        $this->db->update('settings', $data);
-
-        $data['value'] = html_escape($this->input->post('purchase_code'));
-        $this->db->where('key', 'purchase_code');
-        $this->db->update('settings', $data);
-
-        $data['value'] = html_escape($this->input->post('footer_text'));
-        $this->db->where('key', 'footer_text');
-        $this->db->update('settings', $data);
-
-        $data['value'] = html_escape($this->input->post('footer_link'));
-        $this->db->where('key', 'footer_link');
-        $this->db->update('settings', $data);
-
-        $data['value'] = html_escape($this->input->post('website_keywords'));
-        $this->db->where('key', 'website_keywords');
-        $this->db->update('settings', $data);
-
-        $data['value'] = html_escape($this->input->post('website_description'));
-        $this->db->where('key', 'website_description');
-        $this->db->update('settings', $data);
-
-        $data['value'] = html_escape($this->input->post('student_email_verification'));
-        $this->db->where('key', 'student_email_verification');
-        $this->db->update('settings', $data);
-
-        $data['value'] = html_escape($this->input->post('course_accessibility'));
-        $this->db->where('key', 'course_accessibility');
-        $this->db->update('settings', $data);
-
-        $data['value'] = html_escape($this->input->post('allowed_device_number_of_loging'));
-        if ($data['value'] < 1 || !is_numeric($data['value'])) {
-            $data['value'] = 1;
-        }
-        $this->db->where('key', 'allowed_device_number_of_loging');
-        $this->db->update('settings', $data);
-
-        $data['value'] = html_escape($this->input->post('course_selling_tax'));
-        $this->db->where('key', 'course_selling_tax');
-        $this->db->update('settings', $data);
-
-        $data['value'] = html_escape($this->input->post('google_analytics_id'));
-        $this->db->where('key', 'google_analytics_id');
-        $this->db->update('settings', $data);
-
-        $data['value'] = html_escape($this->input->post('meta_pixel_id'));
-        $this->db->where('key', 'meta_pixel_id');
-        $this->db->update('settings', $data);
-
-        $data['value'] = html_escape($this->input->post('public_signup'));
-        $this->db->where('key', 'public_signup');
-        $this->db->update('settings', $data);
-
-        $this->db->where('key', 'account_disable');
-        $row = $this->db->get('settings');
-        if ($row->num_rows() > 0) {
-            $this->db->where('key', 'account_disable');
-            $this->db->update('settings', ['value' => $this->input->post('account_disable')]);
-        } else {
-            $this->db->insert('settings', ['key' => 'account_disable', 'value' => $this->input->post('account_disable')]);
-        }
-
-        $this->db->where('key', 'timezone');
-        $row = $this->db->get('settings');
-        if ($row->num_rows() > 0) {
-            $this->db->where('key', 'timezone');
-            $this->db->update('settings', ['value' => $this->input->post('timezone')]);
-        } else {
-            $this->db->insert('settings', ['key' => 'timezone', 'value' => $this->input->post('timezone')]);
+        foreach ($keys as $key) {
+            $value = $this->input->post($key);
+            if ($value === null) {
+                continue;
+            }
+            if ($key === 'allowed_device_number_of_loging') {
+                $value = is_numeric($value) && $value >= 1 ? (int) $value : 1;
+            }
+            $this->upsert_key_value('settings', $key, html_escape($value));
         }
     }
 
@@ -2409,6 +2314,75 @@ class Crud_model extends CI_Model
         $data['value'] = $this->input->post('refund_policy', false);
         $this->db->where('key', 'refund_policy');
         $this->db->update('frontend_settings', $data);
+    }
+
+    public function update_portal_settings()
+    {
+        $defaults = portal_text_defaults();
+        foreach ($defaults as $key => $languages) {
+            foreach (['en', 'bn'] as $language) {
+                $post_key = 'portal_' . $key . '_' . $language;
+                $value = $this->input->post($post_key);
+                if ($value !== null) {
+                    $this->upsert_key_value('frontend_settings', $post_key, html_escape(trim($value)));
+                }
+            }
+        }
+    }
+
+    public function update_portal_assets()
+    {
+        $assets = [
+            'portal_govt_logo' => ['fallback' => 'assets/global/logo/bangladesh_logo.png', 'extensions' => ['png', 'jpg', 'jpeg', 'webp']],
+            'portal_academy_logo' => ['fallback' => 'assets/global/logo/BMA.png', 'extensions' => ['png', 'jpg', 'jpeg', 'webp']],
+            'portal_govt_background' => ['fallback' => 'assets/global/logo/login_left_bg.png', 'extensions' => ['png', 'jpg', 'jpeg', 'webp']],
+            'portal_academy_background' => ['fallback' => 'assets/global/logo/academy-default-bg.jpeg', 'extensions' => ['png', 'jpg', 'jpeg', 'webp']],
+        ];
+
+        $upload_directory = FCPATH . 'uploads/portal/';
+        if (! is_dir($upload_directory)) {
+            mkdir($upload_directory, 0755, true);
+        }
+
+        foreach ($assets as $key => $config) {
+            if (! isset($_FILES[$key]) || $_FILES[$key]['error'] === UPLOAD_ERR_NO_FILE) {
+                continue;
+            }
+            if ($_FILES[$key]['error'] !== UPLOAD_ERR_OK || $_FILES[$key]['size'] > 8 * 1024 * 1024) {
+                throw new RuntimeException('Invalid upload for ' . $key);
+            }
+
+            $extension = strtolower(pathinfo($_FILES[$key]['name'], PATHINFO_EXTENSION));
+            if (! in_array($extension, $config['extensions'], true)) {
+                throw new RuntimeException('Unsupported file type for ' . $key);
+            }
+
+            $mime = function_exists('mime_content_type') ? mime_content_type($_FILES[$key]['tmp_name']) : '';
+            if ($mime && strpos($mime, 'image/') !== 0) {
+                throw new RuntimeException('Uploaded file is not an image');
+            }
+
+            $filename = $key . '-' . time() . '-' . bin2hex(random_bytes(4)) . '.' . $extension;
+            $relative_path = 'uploads/portal/' . $filename;
+            if (! move_uploaded_file($_FILES[$key]['tmp_name'], FCPATH . $relative_path)) {
+                throw new RuntimeException('Unable to store uploaded image');
+            }
+
+            $previous = get_frontend_settings($key);
+            if ($previous && strpos($previous, 'uploads/portal/') === 0 && is_file(FCPATH . $previous)) {
+                unlink(FCPATH . $previous);
+            }
+            $this->upsert_key_value('frontend_settings', $key, $relative_path);
+        }
+    }
+
+    private function upsert_key_value($table, $key, $value)
+    {
+        if ($this->db->where('key', $key)->get($table)->num_rows() > 0) {
+            $this->db->where('key', $key)->update($table, ['value' => $value]);
+        } else {
+            $this->db->insert($table, ['key' => $key, 'value' => $value]);
+        }
     }
 
     // Water Mark

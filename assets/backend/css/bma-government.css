@@ -121,7 +121,7 @@ body.bma-dashboard {
 .bma-dashboard .leftbar-user {
     background-image:
         linear-gradient(rgba(0, 117, 44, .82), rgba(0, 91, 36, .86)),
-        url("../../global/logo/login_left_bg.png");
+        var(--bma-govt-background, url("../../global/logo/login_left_bg.png"));
     background-position: center;
     background-size: cover;
     border-radius: 4px 4px 0 0;

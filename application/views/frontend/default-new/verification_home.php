@@ -1,8 +1,11 @@
 <?php
     $is_bengali = ($language_code ?? 'en') === 'bn';
-    $text = static function ($english, $bengali) use ($is_bengali) {
-        return $is_bengali ? $bengali : $english;
+    $text = static function ($key) use ($language_code) {
+        return portal_text($key, $language_code);
     };
+    $portal_logo = get_portal_theme() === 'academy_default'
+        ? portal_asset('portal_academy_logo', 'assets/global/logo/BMA.png')
+        : portal_asset('portal_govt_logo', 'assets/global/logo/bangladesh_logo.png');
 ?>
 <section class="bma-hero" aria-labelledby="verification-title">
     <div class="bma-hero-content">
@@ -10,34 +13,34 @@
             <div class="bma-intro">
                 <img
                     class="bma-intro-logo"
-                    src="<?php echo base_url(get_portal_theme() === 'academy_default' ? 'assets/global/logo/BMA.png' : 'assets/global/logo/bangladesh_logo.png'); ?>"
-                    alt="<?php echo html_escape($text(get_portal_theme() === 'academy_default' ? 'Bangladesh Marine Academy Sylhet logo' : 'Government of Bangladesh emblem', get_portal_theme() === 'academy_default' ? 'বাংলাদেশ মেরিন একাডেমি, সিলেটের লোগো' : 'গণপ্রজাতন্ত্রী বাংলাদেশ সরকারের প্রতীক')); ?>"
+                    src="<?php echo html_escape($portal_logo); ?>"
+                    alt="<?php echo html_escape($text('institution_name')); ?>"
                     width="<?php echo get_portal_theme() === 'academy_default' ? '112' : '94'; ?>"
                     height="<?php echo get_portal_theme() === 'academy_default' ? '112' : '94'; ?>"
                 >
-                <span class="bma-kicker"><?php echo html_escape($text('Bangladesh Marine Academy Sylhet', 'বাংলাদেশ মেরিন একাডেমি, সিলেট')); ?></span>
-                <h1 id="verification-title"><?php echo html_escape($text('Certificate Verification Service', 'সনদপত্র যাচাইকরণ সেবা')); ?></h1>
-                <p><?php echo html_escape($text('Verify academy-issued certificates through the official public record.', 'একাডেমি কর্তৃক ইস্যুকৃত সনদ সরকারি রেকর্ডের মাধ্যমে যাচাই করুন।')); ?></p>
+                <span class="bma-kicker"><?php echo html_escape($text('institution_name')); ?></span>
+                <h1 id="verification-title"><?php echo html_escape($text('portal_title')); ?></h1>
+                <p><?php echo html_escape($text('portal_subtitle')); ?></p>
             </div>
 
             <div class="bma-tool">
                 <div class="bma-tool-heading">
-                    <h2><?php echo html_escape($text('Verify a Certificate', 'সনদ যাচাই করুন')); ?></h2>
-                    <span><?php echo html_escape($text('Fields marked with * are required', 'তারকাচিহ্নিত তথ্য আবশ্যক')); ?></span>
+                    <h2><?php echo html_escape($text('verify_form_title')); ?></h2>
+                    <span><?php echo html_escape($text('required_note')); ?></span>
                 </div>
 
-                <ul class="nav nav-pills bma-tab" id="verificationTabs" role="tablist" aria-label="<?php echo html_escape($text('Verification method', 'যাচাইকরণ পদ্ধতি')); ?>">
+                <ul class="nav nav-pills bma-tab" id="verificationTabs" role="tablist" aria-label="<?php echo html_escape($text('verification_method')); ?>">
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="certificate-tab" data-bs-toggle="pill" data-bs-target="#certificate-number" type="button" role="tab" aria-controls="certificate-number" aria-selected="true"><?php echo html_escape($text('Certificate Number', 'সনদ নম্বর')); ?></button>
+                        <button class="nav-link active" id="certificate-tab" data-bs-toggle="pill" data-bs-target="#certificate-number" type="button" role="tab" aria-controls="certificate-number" aria-selected="true"><?php echo html_escape($text('certificate_number')); ?></button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="student-id-tab" data-bs-toggle="pill" data-bs-target="#student-id" type="button" role="tab" aria-controls="student-id" aria-selected="false"><?php echo html_escape($text('Student ID', 'শিক্ষার্থী আইডি')); ?></button>
+                        <button class="nav-link" id="student-id-tab" data-bs-toggle="pill" data-bs-target="#student-id" type="button" role="tab" aria-controls="student-id" aria-selected="false"><?php echo html_escape($text('student_id')); ?></button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="student-name-tab" data-bs-toggle="pill" data-bs-target="#student-name" type="button" role="tab" aria-controls="student-name" aria-selected="false"><?php echo html_escape($text('Student Name', 'শিক্ষার্থীর নাম')); ?></button>
+                        <button class="nav-link" id="student-name-tab" data-bs-toggle="pill" data-bs-target="#student-name" type="button" role="tab" aria-controls="student-name" aria-selected="false"><?php echo html_escape($text('student_name')); ?></button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="scan-qr-tab" data-bs-toggle="pill" data-bs-target="#scan-qr" type="button" role="tab" aria-controls="scan-qr" aria-selected="false"><?php echo html_escape($text('Scan QR', 'কিউআর স্ক্যান')); ?></button>
+                        <button class="nav-link" id="scan-qr-tab" data-bs-toggle="pill" data-bs-target="#scan-qr" type="button" role="tab" aria-controls="scan-qr" aria-selected="false"><?php echo html_escape($text('scan_qr')); ?></button>
                     </li>
                 </ul>
 
@@ -46,25 +49,25 @@
                         <form method="post" action="<?php echo site_url('verify/certificate'); ?>">
                             <div class="bma-form-grid">
                                 <div>
-                                    <label class="bma-label" for="certificate_number"><?php echo html_escape($text('Certificate Number *', 'সনদ নম্বর *')); ?></label>
+                                    <label class="bma-label" for="certificate_number"><?php echo html_escape($text('certificate_number')); ?> *</label>
                                     <input class="form-control bma-input text-uppercase" id="certificate_number" name="certificate_number" placeholder="BMA-SYL-2026-0001" autocomplete="off" required>
                                 </div>
                                 <div>
-                                    <label class="bma-label" for="captcha_certificate"><?php echo html_escape($text('Verification Code *', 'যাচাইকরণ কোড *')); ?></label>
+                                    <label class="bma-label" for="captcha_certificate"><?php echo html_escape($text('verification_code')); ?> *</label>
                                     <input class="form-control bma-input" id="captcha_certificate" name="captcha" inputmode="numeric" autocomplete="off" required>
                                 </div>
                                 <div class="bma-form-action">
-                                    <button class="btn bma-btn w-100" type="submit"><?php echo html_escape($text('Verify', 'যাচাই করুন')); ?></button>
+                                    <button class="btn bma-btn w-100" type="submit"><?php echo html_escape($text('verify_button')); ?></button>
                                 </div>
                             </div>
-                            <div class="bma-form-grid mt-2" aria-label="<?php echo html_escape($text('Captcha image', 'ক্যাপচা ছবি')); ?>">
+                            <div class="bma-form-grid mt-2" aria-label="<?php echo html_escape($text('captcha_image')); ?>">
                                 <div></div>
-                                <img class="bma-captcha" src="<?php echo site_url('verify/captcha'); ?>?scope=certificate&amp;t=<?php echo time(); ?>" alt="<?php echo html_escape($text('Verification code image', 'যাচাইকরণ কোডের ছবি')); ?>">
+                                <img class="bma-captcha" src="<?php echo site_url('verify/captcha'); ?>?scope=certificate&amp;t=<?php echo time(); ?>" alt="<?php echo html_escape($text('verification_code_image')); ?>">
                                 <div></div>
                             </div>
                             <div class="bma-security-note">
                                 <i class="fas fa-shield-alt" aria-hidden="true"></i>
-                                <span><?php echo html_escape($text('Enter the certificate number and the code shown in the image. Verification attempts are logged for security.', 'সনদ নম্বর ও ছবিতে প্রদর্শিত কোড লিখুন। নিরাপত্তার স্বার্থে যাচাইকরণ প্রচেষ্টা সংরক্ষিত হয়।')); ?></span>
+                                <span><?php echo html_escape($text('certificate_security_note')); ?></span>
                             </div>
                         </form>
                     </div>
@@ -73,25 +76,25 @@
                         <form method="post" action="<?php echo site_url('verify/student-id'); ?>">
                             <div class="bma-form-grid two">
                                 <div>
-                                    <label class="bma-label" for="student_id"><?php echo html_escape($text('Student ID *', 'শিক্ষার্থী আইডি *')); ?></label>
+                                    <label class="bma-label" for="student_id"><?php echo html_escape($text('student_id')); ?> *</label>
                                     <input class="form-control bma-input text-uppercase" id="student_id" name="student_id" placeholder="CADET-2026-001" autocomplete="off" required>
                                 </div>
                                 <div>
-                                    <label class="bma-label" for="student_id_institution"><?php echo html_escape($text('Institution', 'প্রতিষ্ঠান')); ?></label>
+                                    <label class="bma-label" for="student_id_institution"><?php echo html_escape($text('institution')); ?></label>
                                     <select class="form-select bma-input" id="student_id_institution" name="institution_id">
-                                        <option value=""><?php echo html_escape($text('Any institution', 'সকল প্রতিষ্ঠান')); ?></option>
+                                        <option value=""><?php echo html_escape($text('any_institution')); ?></option>
                                         <?php foreach ($institutions as $institution): ?>
                                             <option value="<?php echo (int) $institution['id']; ?>"><?php echo html_escape($institution['name']); ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
                                 <div class="bma-form-action">
-                                    <button class="btn bma-btn w-100" type="submit"><?php echo html_escape($text('Verify', 'যাচাই করুন')); ?></button>
+                                    <button class="btn bma-btn w-100" type="submit"><?php echo html_escape($text('verify_button')); ?></button>
                                 </div>
                             </div>
                             <div class="bma-security-note">
                                 <i class="fas fa-user-shield" aria-hidden="true"></i>
-                                <span><?php echo html_escape($text('If multiple certificates are found, only privacy-safe matching details will be displayed.', 'একাধিক সনদ পাওয়া গেলে গোপনীয়তা বজায় রেখে সীমিত তথ্য দেখানো হবে।')); ?></span>
+                                <span><?php echo html_escape($text('student_id_note')); ?></span>
                             </div>
                         </form>
                     </div>
@@ -100,40 +103,40 @@
                         <form method="post" action="<?php echo site_url('verify/student-name'); ?>">
                             <div class="bma-form-grid name">
                                 <div>
-                                    <label class="bma-label" for="student_name"><?php echo html_escape($text('Student Name *', 'শিক্ষার্থীর নাম *')); ?></label>
-                                    <input class="form-control bma-input" id="student_name" name="student_name" placeholder="<?php echo html_escape($text('Enter full name', 'পূর্ণ নাম লিখুন')); ?>" autocomplete="off" required>
+                                    <label class="bma-label" for="student_name"><?php echo html_escape($text('student_name')); ?> *</label>
+                                    <input class="form-control bma-input" id="student_name" name="student_name" placeholder="<?php echo html_escape($text('full_name_placeholder')); ?>" autocomplete="off" required>
                                 </div>
                                 <div>
-                                    <label class="bma-label" for="name_institution"><?php echo html_escape($text('Institution', 'প্রতিষ্ঠান')); ?></label>
+                                    <label class="bma-label" for="name_institution"><?php echo html_escape($text('institution')); ?></label>
                                     <select class="form-select bma-input" id="name_institution" name="institution_id">
-                                        <option value=""><?php echo html_escape($text('Select institution', 'প্রতিষ্ঠান নির্বাচন')); ?></option>
+                                        <option value=""><?php echo html_escape($text('select_institution')); ?></option>
                                         <?php foreach ($institutions as $institution): ?>
                                             <option value="<?php echo (int) $institution['id']; ?>"><?php echo html_escape($institution['name']); ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
                                 <div>
-                                    <label class="bma-label" for="issue_year"><?php echo html_escape($text('Issue Year', 'ইস্যু সাল')); ?></label>
+                                    <label class="bma-label" for="issue_year"><?php echo html_escape($text('issue_year')); ?></label>
                                     <input class="form-control bma-input" id="issue_year" name="issue_year" inputmode="numeric" placeholder="2026">
                                 </div>
                                 <div class="bma-form-action">
-                                    <button class="btn bma-btn w-100" type="submit"><?php echo html_escape($text('Search', 'অনুসন্ধান')); ?></button>
+                                    <button class="btn bma-btn w-100" type="submit"><?php echo html_escape($text('search_button')); ?></button>
                                 </div>
                             </div>
                             <div class="bma-form-grid mt-2">
                                 <div>
-                                    <label class="bma-label" for="certificate_type"><?php echo html_escape($text('Certificate Type', 'সনদের ধরন')); ?></label>
+                                    <label class="bma-label" for="certificate_type"><?php echo html_escape($text('certificate_type')); ?></label>
                                     <input class="form-control bma-input" id="certificate_type" name="certificate_type" placeholder="Course Completion">
                                 </div>
                                 <div>
-                                    <label class="bma-label" for="captcha_name"><?php echo html_escape($text('Verification Code *', 'যাচাইকরণ কোড *')); ?></label>
+                                    <label class="bma-label" for="captcha_name"><?php echo html_escape($text('verification_code')); ?> *</label>
                                     <input class="form-control bma-input" id="captcha_name" name="captcha" inputmode="numeric" autocomplete="off" required>
                                 </div>
-                                <img class="bma-captcha" src="<?php echo site_url('verify/captcha'); ?>?scope=name&amp;n=<?php echo time(); ?>" alt="<?php echo html_escape($text('Verification code image', 'যাচাইকরণ কোডের ছবি')); ?>">
+                                <img class="bma-captcha" src="<?php echo site_url('verify/captcha'); ?>?scope=name&amp;n=<?php echo time(); ?>" alt="<?php echo html_escape($text('verification_code_image')); ?>">
                             </div>
                             <div class="bma-security-note">
                                 <i class="fas fa-info-circle" aria-hidden="true"></i>
-                                <span><?php echo html_escape($text('Name search requires at least one additional detail.', 'নাম দিয়ে অনুসন্ধানের ক্ষেত্রে অন্তত একটি অতিরিক্ত তথ্য দিতে হবে।')); ?></span>
+                                <span><?php echo html_escape($text('student_name_note')); ?></span>
                             </div>
                         </form>
                     </div>
@@ -142,15 +145,15 @@
                         <div class="row g-3">
                             <div class="col-md-7">
                                 <div id="qr-reader" class="bma-qr-box d-flex align-items-center justify-content-center text-muted">
-                                    <span><?php echo html_escape($text('The QR scanner will appear here after camera permission is granted.', 'ক্যামেরা অনুমতি দিলে এখানে কিউআর স্ক্যানার দেখা যাবে।')); ?></span>
+                                    <span><?php echo html_escape($text('qr_camera_note')); ?></span>
                                 </div>
                             </div>
                             <div class="col-md-5">
-                                <button class="btn bma-btn w-100 mb-3" id="start-qr" type="button"><?php echo html_escape($text('Start Camera', 'ক্যামেরা চালু করুন')); ?></button>
+                                <button class="btn bma-btn w-100 mb-3" id="start-qr" type="button"><?php echo html_escape($text('start_camera')); ?></button>
                                 <form id="qr-token-form" method="get">
-                                    <label class="bma-label" for="qr_token"><?php echo html_escape($text('QR Link or Token', 'কিউআর লিংক অথবা টোকেন')); ?></label>
+                                    <label class="bma-label" for="qr_token"><?php echo html_escape($text('qr_link_token')); ?></label>
                                     <input class="form-control bma-input mb-2" id="qr_token" placeholder="https://.../verify/qr/...">
-                                    <button class="btn bma-outline w-100" type="submit"><?php echo html_escape($text('Open Link', 'লিংক খুলুন')); ?></button>
+                                    <button class="btn bma-outline w-100" type="submit"><?php echo html_escape($text('open_link')); ?></button>
                                 </form>
                             </div>
                         </div>
@@ -173,7 +176,7 @@ document.getElementById('qr-token-form').addEventListener('submit', function (ev
 
 document.getElementById('start-qr').addEventListener('click', function () {
     if (typeof Html5Qrcode === 'undefined') {
-        document.getElementById('qr-reader').innerHTML = '<span><?php echo addslashes($text('The scanner could not load. Paste the QR link instead.', 'স্ক্যানার লোড হয়নি। কিউআর লিংক লিখুন।')); ?></span>';
+        document.getElementById('qr-reader').innerHTML = '<span><?php echo addslashes($text('scanner_error')); ?></span>';
         return;
     }
     var qr = new Html5Qrcode('qr-reader');

@@ -374,6 +374,154 @@ if (!function_exists('get_portal_theme')) {
     }
 }
 
+if (!function_exists('get_portal_setting')) {
+    function get_portal_setting($key, $default = '')
+    {
+        $value = get_frontend_settings($key);
+        return $value !== null && $value !== '' ? $value : $default;
+    }
+}
+
+if (!function_exists('portal_text_defaults')) {
+    function portal_text_defaults()
+    {
+        return [
+            'government_name' => [
+                'en' => "Government of the People's Republic of Bangladesh",
+                'bn' => 'গণপ্রজাতন্ত্রী বাংলাদেশ সরকার',
+            ],
+            'institution_name' => [
+                'en' => get_settings('system_name') ?: 'Bangladesh Marine Academy Sylhet',
+                'bn' => 'বাংলাদেশ মেরিন একাডেমি, সিলেট',
+            ],
+            'system_title' => [
+                'en' => get_settings('system_title') ?: 'Certificate Verification System',
+                'bn' => 'সনদপত্র যাচাইকরণ ব্যবস্থা',
+            ],
+            'portal_title' => [
+                'en' => 'Certificate Verification System',
+                'bn' => 'সনদপত্র যাচাইকরণ ব্যবস্থা',
+            ],
+            'portal_subtitle' => [
+                'en' => 'Verify academy-issued certificates through the official public record.',
+                'bn' => 'একাডেমি কর্তৃক ইস্যুকৃত সনদ সরকারি রেকর্ডের মাধ্যমে যাচাই করুন।',
+            ],
+            'verify_form_title' => ['en' => 'Verify a Certificate', 'bn' => 'সনদ যাচাই করুন'],
+            'required_note' => ['en' => 'Fields marked with * are required', 'bn' => 'তারকাচিহ্নিত তথ্য আবশ্যক'],
+            'verification_method' => ['en' => 'Verification method', 'bn' => 'যাচাইকরণ পদ্ধতি'],
+            'captcha_image' => ['en' => 'Captcha image', 'bn' => 'ক্যাপচা ছবি'],
+            'verification_code_image' => ['en' => 'Verification code image', 'bn' => 'যাচাইকরণ কোডের ছবি'],
+            'certificate_number' => ['en' => 'Certificate Number', 'bn' => 'সনদ নম্বর'],
+            'student_id' => ['en' => 'Student ID', 'bn' => 'শিক্ষার্থী আইডি'],
+            'student_name' => ['en' => 'Student Name', 'bn' => 'শিক্ষার্থীর নাম'],
+            'full_name_placeholder' => ['en' => 'Enter full name', 'bn' => 'পূর্ণ নাম লিখুন'],
+            'scan_qr' => ['en' => 'Scan QR', 'bn' => 'কিউআর স্ক্যান'],
+            'verification_code' => ['en' => 'Verification Code', 'bn' => 'যাচাইকরণ কোড'],
+            'verify_button' => ['en' => 'Verify', 'bn' => 'যাচাই করুন'],
+            'search_button' => ['en' => 'Search', 'bn' => 'অনুসন্ধান'],
+            'institution' => ['en' => 'Institution', 'bn' => 'প্রতিষ্ঠান'],
+            'any_institution' => ['en' => 'Any institution', 'bn' => 'সকল প্রতিষ্ঠান'],
+            'select_institution' => ['en' => 'Select institution', 'bn' => 'প্রতিষ্ঠান নির্বাচন'],
+            'issue_year' => ['en' => 'Issue Year', 'bn' => 'ইস্যু সাল'],
+            'certificate_type' => ['en' => 'Certificate Type', 'bn' => 'সনদের ধরন'],
+            'certificate_security_note' => [
+                'en' => 'Enter the certificate number and the code shown in the image. Verification attempts are logged for security.',
+                'bn' => 'সনদ নম্বর ও ছবিতে প্রদর্শিত কোড লিখুন। নিরাপত্তার স্বার্থে যাচাইকরণ প্রচেষ্টা সংরক্ষিত হয়।',
+            ],
+            'student_id_note' => [
+                'en' => 'If multiple certificates are found, only privacy-safe matching details will be displayed.',
+                'bn' => 'একাধিক সনদ পাওয়া গেলে গোপনীয়তা বজায় রেখে সীমিত তথ্য দেখানো হবে।',
+            ],
+            'student_name_note' => [
+                'en' => 'Name search requires at least one additional detail.',
+                'bn' => 'নাম দিয়ে অনুসন্ধানের ক্ষেত্রে অন্তত একটি অতিরিক্ত তথ্য দিতে হবে।',
+            ],
+            'qr_camera_note' => [
+                'en' => 'The QR scanner will appear here after camera permission is granted.',
+                'bn' => 'ক্যামেরা অনুমতি দিলে এখানে কিউআর স্ক্যানার দেখা যাবে।',
+            ],
+            'start_camera' => ['en' => 'Start Camera', 'bn' => 'ক্যামেরা চালু করুন'],
+            'qr_link_token' => ['en' => 'QR Link or Token', 'bn' => 'কিউআর লিংক অথবা টোকেন'],
+            'open_link' => ['en' => 'Open Link', 'bn' => 'লিংক খুলুন'],
+            'scanner_error' => [
+                'en' => 'The scanner could not load. Paste the QR link instead.',
+                'bn' => 'স্ক্যানার লোড হয়নি। কিউআর লিংক লিখুন।',
+            ],
+            'staff_login' => ['en' => 'Staff Login', 'bn' => 'কর্মকর্তা লগইন'],
+            'login_title' => ['en' => 'Authorized Staff Login', 'bn' => 'অনুমোদিত কর্মকর্তা লগইন'],
+            'login_subtitle' => [
+                'en' => 'Access the certificate administration and institution dashboard.',
+                'bn' => 'সনদ প্রশাসন ও প্রতিষ্ঠান ড্যাশবোর্ডে প্রবেশ করুন।',
+            ],
+            'login_form_title' => ['en' => 'Sign in to your account', 'bn' => 'আপনার অ্যাকাউন্টে প্রবেশ করুন'],
+            'authorized_only' => ['en' => 'Authorized users only', 'bn' => 'শুধুমাত্র অনুমোদিত ব্যবহারকারী'],
+            'email_address' => ['en' => 'Email Address', 'bn' => 'ইমেইল ঠিকানা'],
+            'password' => ['en' => 'Password', 'bn' => 'পাসওয়ার্ড'],
+            'show_password' => ['en' => 'Show password', 'bn' => 'পাসওয়ার্ড দেখুন'],
+            'hide_password' => ['en' => 'Hide password', 'bn' => 'পাসওয়ার্ড লুকান'],
+            'forgot_password' => ['en' => 'Forgot password?', 'bn' => 'পাসওয়ার্ড ভুলে গেছেন?'],
+            'sign_in' => ['en' => 'Sign In', 'bn' => 'প্রবেশ করুন'],
+            'login_security_note' => [
+                'en' => 'Login attempts are monitored. Do not share your account credentials.',
+                'bn' => 'লগইন প্রচেষ্টা পর্যবেক্ষণ করা হয়। আপনার অ্যাকাউন্টের তথ্য শেয়ার করবেন না।',
+            ],
+            'footer_note' => [
+                'en' => 'Only certificates published by an authorized institution can be verified on this portal.',
+                'bn' => 'অনুমোদিত কর্তৃপক্ষ কর্তৃক প্রকাশিত সনদসমূহ এই পোর্টালে যাচাই করা যাবে।',
+            ],
+            'support' => ['en' => 'Support', 'bn' => 'সহায়তা'],
+            'dashboard_subtitle' => ['en' => 'Certificate Administration', 'bn' => 'সনদ প্রশাসন'],
+            'portal_button' => ['en' => 'Certificate Verification Portal', 'bn' => 'সনদ যাচাইকরণ পোর্টাল'],
+            'certificate_verified' => ['en' => 'Certificate verified', 'bn' => 'সনদ যাচাই করা হয়েছে'],
+            'verified_at' => ['en' => 'Verified at', 'bn' => 'যাচাইয়ের সময়'],
+            'new_search' => ['en' => 'New Search', 'bn' => 'নতুন অনুসন্ধান'],
+            'print' => ['en' => 'Print', 'bn' => 'প্রিন্ট'],
+            'program_course' => ['en' => 'Program / Course', 'bn' => 'প্রোগ্রাম / কোর্স'],
+            'issue_date' => ['en' => 'Issue Date', 'bn' => 'ইস্যুর তারিখ'],
+            'expiry_date' => ['en' => 'Expiry Date', 'bn' => 'মেয়াদ শেষের তারিখ'],
+            'not_applicable' => ['en' => 'Not applicable', 'bn' => 'প্রযোজ্য নয়'],
+            'verification_provenance' => ['en' => 'Verification provenance', 'bn' => 'যাচাইকরণের উৎস'],
+            'record_reference' => ['en' => 'Record Reference', 'bn' => 'রেকর্ড রেফারেন্স'],
+            'public_status' => ['en' => 'Public Status', 'bn' => 'পাবলিক অবস্থা'],
+            'visibility' => ['en' => 'Visibility', 'bn' => 'দৃশ্যমানতা'],
+            'public_remarks' => ['en' => 'Public Remarks', 'bn' => 'পাবলিক মন্তব্য'],
+            'not_verified' => ['en' => 'Not Verified', 'bn' => 'যাচাই হয়নি'],
+            'invalid_title' => ['en' => 'No matching certificate could be verified.', 'bn' => 'কোনো মিল থাকা সনদ যাচাই করা যায়নি।'],
+            'invalid_help' => ['en' => 'Check the certificate number, student ID, institution, or QR code and try again.', 'bn' => 'সনদ নম্বর, শিক্ষার্থী আইডি, প্রতিষ্ঠান অথবা কিউআর কোড পরীক্ষা করে আবার চেষ্টা করুন।'],
+            'search_again' => ['en' => 'Search Again', 'bn' => 'আবার অনুসন্ধান'],
+            'report_issue' => ['en' => 'Report Issue', 'bn' => 'সমস্যা জানান'],
+            'select_match' => ['en' => 'Select the matching certificate', 'bn' => 'মিল থাকা সনদ নির্বাচন করুন'],
+            'multiple_matches' => ['en' => 'Multiple privacy-safe matches were found. Choose one to view the public result.', 'bn' => 'একাধিক গোপনীয়তা-নিরাপদ মিল পাওয়া গেছে। পাবলিক ফলাফল দেখতে একটি নির্বাচন করুন।'],
+            'refine_search' => ['en' => 'Refine Search', 'bn' => 'অনুসন্ধান পরিমার্জন'],
+            'student' => ['en' => 'Student', 'bn' => 'শিক্ষার্থী'],
+            'program' => ['en' => 'Program', 'bn' => 'প্রোগ্রাম'],
+            'certificate' => ['en' => 'Certificate', 'bn' => 'সনদ'],
+            'status' => ['en' => 'Status', 'bn' => 'অবস্থা'],
+            'open' => ['en' => 'Open', 'bn' => 'খুলুন'],
+            'receipt_title' => ['en' => 'Certificate Verification Receipt', 'bn' => 'সনদ যাচাইকরণ রসিদ'],
+            'receipt_generated' => ['en' => 'Receipt Generated', 'bn' => 'রসিদ তৈরির সময়'],
+        ];
+    }
+}
+
+if (!function_exists('portal_text')) {
+    function portal_text($key, $language = 'en')
+    {
+        $language = $language === 'bn' ? 'bn' : 'en';
+        $defaults = portal_text_defaults();
+        $default = isset($defaults[$key][$language]) ? $defaults[$key][$language] : '';
+        return get_portal_setting('portal_' . $key . '_' . $language, $default);
+    }
+}
+
+if (!function_exists('portal_asset')) {
+    function portal_asset($key, $fallback)
+    {
+        $path = get_portal_setting($key, $fallback);
+        return base_url(ltrim($path, '/'));
+    }
+}
+
 if (!function_exists('get_current_banner')) {
     function get_current_banner($key = '')
     {

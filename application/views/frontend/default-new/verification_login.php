@@ -1,8 +1,11 @@
 <?php
     $is_bengali = ($language_code ?? 'en') === 'bn';
-    $text = static function ($english, $bengali) use ($is_bengali) {
-        return $is_bengali ? $bengali : $english;
+    $text = static function ($key) use ($language_code) {
+        return portal_text($key, $language_code);
     };
+    $portal_logo = get_portal_theme() === 'academy_default'
+        ? portal_asset('portal_academy_logo', 'assets/global/logo/BMA.png')
+        : portal_asset('portal_govt_logo', 'assets/global/logo/bangladesh_logo.png');
 ?>
 <?php if (get_frontend_settings('recaptcha_status')): ?>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
@@ -14,20 +17,20 @@
             <div class="bma-intro">
                 <img
                     class="bma-intro-logo"
-                    src="<?php echo base_url(get_portal_theme() === 'academy_default' ? 'assets/global/logo/BMA.png' : 'assets/global/logo/bangladesh_logo.png'); ?>"
-                    alt="<?php echo html_escape($text(get_portal_theme() === 'academy_default' ? 'Bangladesh Marine Academy Sylhet logo' : 'Government of Bangladesh emblem', get_portal_theme() === 'academy_default' ? 'বাংলাদেশ মেরিন একাডেমি, সিলেটের লোগো' : 'গণপ্রজাতন্ত্রী বাংলাদেশ সরকারের প্রতীক')); ?>"
+                    src="<?php echo html_escape($portal_logo); ?>"
+                    alt="<?php echo html_escape($text('institution_name')); ?>"
                     width="<?php echo get_portal_theme() === 'academy_default' ? '112' : '94'; ?>"
                     height="<?php echo get_portal_theme() === 'academy_default' ? '112' : '94'; ?>"
                 >
-                <span class="bma-kicker"><?php echo html_escape($text('Bangladesh Marine Academy Sylhet', 'বাংলাদেশ মেরিন একাডেমি, সিলেট')); ?></span>
-                <h1 id="login-title"><?php echo html_escape($text('Authorized Staff Login', 'অনুমোদিত কর্মকর্তা লগইন')); ?></h1>
-                <p><?php echo html_escape($text('Access the certificate administration and institution dashboard.', 'সনদ প্রশাসন ও প্রতিষ্ঠান ড্যাশবোর্ডে প্রবেশ করুন।')); ?></p>
+                <span class="bma-kicker"><?php echo html_escape($text('institution_name')); ?></span>
+                <h1 id="login-title"><?php echo html_escape($text('login_title')); ?></h1>
+                <p><?php echo html_escape($text('login_subtitle')); ?></p>
             </div>
 
             <div class="bma-tool bma-login-tool">
                 <div class="bma-tool-heading">
-                    <h2><?php echo html_escape($text('Sign in to your account', 'আপনার অ্যাকাউন্টে প্রবেশ করুন')); ?></h2>
-                    <span><?php echo html_escape($text('Authorized users only', 'শুধুমাত্র অনুমোদিত ব্যবহারকারী')); ?></span>
+                    <h2><?php echo html_escape($text('login_form_title')); ?></h2>
+                    <span><?php echo html_escape($text('authorized_only')); ?></span>
                 </div>
 
                 <form class="bma-login-form" action="<?php echo site_url('login/validate_login'); ?>" method="post" id="login-form">
@@ -39,22 +42,22 @@
                     <?php endif; ?>
 
                     <div class="mb-3">
-                        <label class="bma-label" for="email"><?php echo html_escape($text('Email Address', 'ইমেইল ঠিকানা')); ?></label>
+                        <label class="bma-label" for="email"><?php echo html_escape($text('email_address')); ?></label>
                         <input class="form-control bma-input" id="email" type="email" name="email" autocomplete="username" placeholder="name@example.gov.bd" required autofocus>
                     </div>
 
                     <div class="mb-2">
-                        <label class="bma-label" for="password"><?php echo html_escape($text('Password', 'পাসওয়ার্ড')); ?></label>
+                        <label class="bma-label" for="password"><?php echo html_escape($text('password')); ?></label>
                         <div class="bma-password-field">
                             <input class="form-control bma-input" id="password" type="password" name="password" autocomplete="current-password" required>
-                            <button class="bma-password-toggle" type="button" aria-label="<?php echo html_escape($text('Show password', 'পাসওয়ার্ড দেখুন')); ?>" aria-pressed="false">
+                            <button class="bma-password-toggle" type="button" aria-label="<?php echo html_escape($text('show_password')); ?>" aria-pressed="false">
                                 <i class="fas fa-eye" aria-hidden="true"></i>
                             </button>
                         </div>
                     </div>
 
                     <div class="text-end mb-3">
-                        <a class="bma-login-link" href="<?php echo site_url('login/forgot_password_request'); ?>"><?php echo html_escape($text('Forgot password?', 'পাসওয়ার্ড ভুলে গেছেন?')); ?></a>
+                        <a class="bma-login-link" href="<?php echo site_url('login/forgot_password_request'); ?>"><?php echo html_escape($text('forgot_password')); ?></a>
                     </div>
 
                     <?php if (get_frontend_settings('recaptcha_status')): ?>
@@ -63,15 +66,15 @@
 
                     <?php if (get_frontend_settings('recaptcha_status_v3')): ?>
                         <button class="btn bma-btn w-100 g-recaptcha" data-sitekey="<?php echo html_escape(get_frontend_settings('recaptcha_sitekey_v3')); ?>" data-callback="onLoginSubmit" data-action="submit">
-                            <?php echo html_escape($text('Sign In', 'প্রবেশ করুন')); ?>
+                            <?php echo html_escape($text('sign_in')); ?>
                         </button>
                     <?php else: ?>
-                        <button type="submit" class="btn bma-btn w-100"><?php echo html_escape($text('Sign In', 'প্রবেশ করুন')); ?></button>
+                        <button type="submit" class="btn bma-btn w-100"><?php echo html_escape($text('sign_in')); ?></button>
                     <?php endif; ?>
 
                     <div class="bma-security-note">
                         <i class="fas fa-lock" aria-hidden="true"></i>
-                        <span><?php echo html_escape($text('Login attempts are monitored. Do not share your account credentials.', 'লগইন প্রচেষ্টা পর্যবেক্ষণ করা হয়। আপনার অ্যাকাউন্টের তথ্য শেয়ার করবেন না।')); ?></span>
+                        <span><?php echo html_escape($text('login_security_note')); ?></span>
                     </div>
                 </form>
             </div>
@@ -117,7 +120,7 @@ document.querySelector('.bma-password-toggle').addEventListener('click', functio
     var show = input.type === 'password';
     input.type = show ? 'text' : 'password';
     this.setAttribute('aria-pressed', show ? 'true' : 'false');
-    this.setAttribute('aria-label', show ? '<?php echo addslashes($text('Hide password', 'পাসওয়ার্ড লুকান')); ?>' : '<?php echo addslashes($text('Show password', 'পাসওয়ার্ড দেখুন')); ?>');
+    this.setAttribute('aria-label', show ? '<?php echo addslashes($text('hide_password')); ?>' : '<?php echo addslashes($text('show_password')); ?>');
     this.querySelector('i').classList.toggle('fa-eye', !show);
     this.querySelector('i').classList.toggle('fa-eye-slash', show);
 });
