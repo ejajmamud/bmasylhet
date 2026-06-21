@@ -13,6 +13,11 @@ class Verification extends CI_Controller
         $this->load->library('session');
         $this->load->helper(['url', 'security']);
 
+        $requestedLanguage = strtolower((string) $this->input->get('lang'));
+        if (in_array($requestedLanguage, ['en', 'bn'], true)) {
+            $this->session->set_userdata('verification_language', $requestedLanguage);
+        }
+
         if (function_exists('get_frontend_settings') && get_frontend_settings('theme')) {
             $this->theme = get_frontend_settings('theme');
         }
@@ -28,7 +33,7 @@ class Verification extends CI_Controller
     public function certificate()
     {
         $this->requirePost();
-        if (! $this->captchaIsValid($this->input->post('captcha'))) {
+        if (! $this->captchaIsValid($this->input->post('captcha'), 'certificate')) {
             return $this->invalid('certificate_number', $this->input->post('certificate_number'), 'The verification code did not match.');
         }
 
@@ -70,7 +75,7 @@ class Verification extends CI_Controller
     public function student_name()
     {
         $this->requirePost();
-        if (! $this->captchaIsValid($this->input->post('captcha'))) {
+        if (! $this->captchaIsValid($this->input->post('captcha'), 'name')) {
             return $this->invalid('student_name', $this->input->post('student_name'), 'The verification code did not match.');
         }
 
@@ -148,8 +153,13 @@ class Verification extends CI_Controller
 
     public function captcha()
     {
+        $scope = strtolower((string) $this->input->get('scope'));
+        if (! in_array($scope, ['certificate', 'name'], true)) {
+            $scope = 'certificate';
+        }
+
         $code = (string) random_int(10000, 99999);
-        $this->session->set_userdata('verification_captcha', $code);
+        $this->session->set_userdata('verification_captcha_' . $scope, $code);
 
         $image = imagecreatetruecolor(150, 46);
         $background = imagecolorallocate($image, 247, 250, 252);
@@ -232,10 +242,11 @@ class Verification extends CI_Controller
         ]);
     }
 
-    private function captchaIsValid($value)
+    private function captchaIsValid($value, $scope)
     {
-        $expected = (string) $this->session->userdata('verification_captcha');
-        $this->session->unset_userdata('verification_captcha');
+        $sessionKey = 'verification_captcha_' . $scope;
+        $expected = (string) $this->session->userdata($sessionKey);
+        $this->session->unset_userdata($sessionKey);
         return $expected !== '' && hash_equals($expected, trim((string) $value));
     }
 
@@ -261,9 +272,12 @@ class Verification extends CI_Controller
 
     private function baseData($data = [])
     {
-        $data['official_name'] = 'Bandladesh Marine Academy Sylhet';
+        $data['official_name'] = 'Bangladesh Marine Academy Sylhet';
         $data['brand_color'] = '#00A63E';
         $data['support_email'] = 'ejajjoy3@gmail.com';
+        $data['language_code'] = in_array($this->session->userdata('verification_language'), ['en', 'bn'], true)
+            ? $this->session->userdata('verification_language')
+            : 'en';
         return $data;
     }
 
