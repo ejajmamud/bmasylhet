@@ -8,8 +8,8 @@
         ],
         'academy_default' => [
             'name' => 'Academy_Default',
-            'description' => 'Original Academy LMS frontend, login, and dashboard presentation retained as a working fallback.',
-            'preview' => base_url('assets/frontend/default-new/preview.png'),
+            'description' => 'Professional Marine Academy identity with white navigation, navy maritime surfaces, the official academy crest, and coordinated portal, login, and dashboard views.',
+            'preview' => base_url('assets/global/theme-previews/academy-default.png'),
         ],
     ];
 ?>

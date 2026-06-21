@@ -14,7 +14,7 @@
     <!-- all the css files -->
     <?php include 'includes_top.php'; ?>
 </head>
-<body data-layout="detached"<?php echo get_portal_theme() === 'govt_green' ? ' class="bma-dashboard"' : ''; ?>>
+<body data-layout="detached" class="<?php echo get_portal_theme() === 'govt_green' ? 'bma-dashboard' : 'bma-academy-dashboard'; ?>">
     <!-- HEADER -->
     <?php include 'header.php'; ?>
     <div class="container-fluid">

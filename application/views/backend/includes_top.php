@@ -17,6 +17,8 @@
 <link href="<?php echo base_url('assets/backend/css/main.css') ?>" rel="stylesheet" type="text/css" />
 <?php if (get_portal_theme() === 'govt_green'): ?>
     <link href="<?php echo base_url('assets/backend/css/bma-government.css') ?>" rel="stylesheet" type="text/css" />
+<?php elseif (get_portal_theme() === 'academy_default'): ?>
+    <link href="<?php echo base_url('assets/backend/css/bma-academy.css') ?>" rel="stylesheet" type="text/css" />
 <?php endif; ?>
 
 <!-- font awesome 5 -->

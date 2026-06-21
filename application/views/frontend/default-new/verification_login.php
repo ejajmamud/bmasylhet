@@ -14,10 +14,10 @@
             <div class="bma-intro">
                 <img
                     class="bma-intro-logo"
-                    src="<?php echo base_url('assets/global/logo/bangladesh_logo.png'); ?>"
-                    alt="<?php echo html_escape($text('Government of Bangladesh emblem', 'গণপ্রজাতন্ত্রী বাংলাদেশ সরকারের প্রতীক')); ?>"
-                    width="94"
-                    height="94"
+                    src="<?php echo base_url(get_portal_theme() === 'academy_default' ? 'assets/global/logo/BMA.png' : 'assets/global/logo/bangladesh_logo.png'); ?>"
+                    alt="<?php echo html_escape($text(get_portal_theme() === 'academy_default' ? 'Bangladesh Marine Academy Sylhet logo' : 'Government of Bangladesh emblem', get_portal_theme() === 'academy_default' ? 'বাংলাদেশ মেরিন একাডেমি, সিলেটের লোগো' : 'গণপ্রজাতন্ত্রী বাংলাদেশ সরকারের প্রতীক')); ?>"
+                    width="<?php echo get_portal_theme() === 'academy_default' ? '112' : '94'; ?>"
+                    height="<?php echo get_portal_theme() === 'academy_default' ? '112' : '94'; ?>"
                 >
                 <span class="bma-kicker"><?php echo html_escape($text('Bangladesh Marine Academy Sylhet', 'বাংলাদেশ মেরিন একাডেমি, সিলেট')); ?></span>
                 <h1 id="login-title"><?php echo html_escape($text('Authorized Staff Login', 'অনুমোদিত কর্মকর্তা লগইন')); ?></h1>

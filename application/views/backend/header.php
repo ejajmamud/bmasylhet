@@ -16,12 +16,16 @@
                 </span>
             </a>
         <?php else: ?>
-            <a href="<?php echo site_url($this->session->userdata('role')); ?>" class="topnav-logo" style="min-width: unset;">
+            <a href="<?php echo site_url($this->session->userdata('role')); ?>" class="topnav-logo bma-academy-brand">
                 <span class="topnav-logo-lg">
-                    <img src="<?php echo base_url('uploads/system/' . get_frontend_settings('small_logo')); ?>" alt="" height="40">
+                    <img src="<?php echo base_url('assets/global/logo/BMA.png'); ?>" alt="Bangladesh Marine Academy Sylhet logo" height="52">
+                    <span class="bma-academy-brand-copy">
+                        <strong>Bangladesh Marine Academy Sylhet</strong>
+                        <small>Certificate Administration</small>
+                    </span>
                 </span>
                 <span class="topnav-logo-sm">
-                    <img src="<?php echo base_url('uploads/system/' . get_frontend_settings('small_logo')); ?>" alt="" height="40">
+                    <img src="<?php echo base_url('assets/global/logo/BMA.png'); ?>" alt="Bangladesh Marine Academy Sylhet logo" height="44">
                 </span>
             </a>
         <?php endif; ?>
@@ -276,8 +280,7 @@
             <?php if (get_portal_theme() === 'govt_green'): ?>
                 <a href="<?php echo site_url('/'); ?>" target="" class="btn btn-outline-light d-none d-md-inline-block">Public Verification Portal</a>
             <?php else: ?>
-                <h4 style="color: #fff; float: left;" class="d-none d-md-inline-block"><?php echo get_settings('system_name'); ?></h4>
-                <a href="<?php echo site_url('home'); ?>" class="btn btn-outline-light ml-3 d-none d-md-inline-block"><?php echo get_phrase('visit_website'); ?></a>
+                <a href="<?php echo site_url('/'); ?>" class="btn btn-outline-primary d-none d-md-inline-block">Certificate Verification Portal</a>
             <?php endif; ?>
         </div>
     </div>

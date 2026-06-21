@@ -3,6 +3,8 @@
     $page_title = $page_title ?? 'Certificate Verification';
     $language_code = $language_code ?? 'en';
     $is_bengali = $language_code === 'bn';
+    $portal_theme = get_portal_theme();
+    $is_academy_theme = $portal_theme === 'academy_default';
     $tr = static function ($english, $bengali) use ($is_bengali) {
         return $is_bengali ? $bengali : $english;
     };
@@ -447,9 +449,129 @@
             body { background: #fff; }
             .bma-panel, .bma-card { box-shadow: none; }
         }
+
+        <?php if ($is_academy_theme): ?>
+        :root {
+            --bma-brand: #315fa6;
+            --bma-brand-dark: #173a68;
+            --bma-brand-deep: #102d51;
+            --bma-ink: #16263a;
+            --bma-muted: #607086;
+            --bma-line: #cad5e3;
+            --bma-soft: #f3f6fa;
+            --bma-focus: #f4be3f;
+        }
+        body {
+            background: #f3f6fa;
+            color: var(--bma-ink);
+        }
+        .bma-header {
+            background: #fff;
+            color: var(--bma-brand-deep);
+            border-bottom: 1px solid #d6dfeb;
+            box-shadow: 0 2px 8px rgba(16, 45, 81, .08);
+        }
+        .bma-header .text-white,
+        .bma-header a.text-white {
+            color: var(--bma-brand-deep) !important;
+        }
+        .bma-logo {
+            width: 70px;
+            height: 62px;
+            flex-basis: 70px;
+            padding: 0;
+            background: #fff;
+            border: 0;
+            border-radius: 0;
+        }
+        .bma-header .bma-outline {
+            color: var(--bma-brand-dark);
+            border-color: #8ea7c7;
+        }
+        .bma-header .bma-outline:hover {
+            color: #fff;
+            background: var(--bma-brand-dark);
+            border-color: var(--bma-brand-dark);
+        }
+        .bma-header .btn-light {
+            color: #fff;
+            background: var(--bma-brand-dark);
+            border-color: var(--bma-brand-dark) !important;
+        }
+        .bma-language {
+            border-color: #91a7c3;
+        }
+        .bma-language a {
+            color: var(--bma-brand-dark);
+        }
+        .bma-language a + a {
+            border-left-color: #91a7c3;
+        }
+        .bma-language a.active {
+            color: #fff;
+            background: var(--bma-brand-dark);
+        }
+        .bma-hero {
+            min-height: calc(100vh - 80px);
+            background-image: url('<?php echo base_url('assets/global/logo/academy-default-bg.jpeg'); ?>');
+            background-position: center;
+            background-size: cover;
+            border-bottom: 4px solid #4f79b9;
+        }
+        .bma-hero::before {
+            background: linear-gradient(90deg, rgba(9, 32, 61, .78) 0%, rgba(16, 48, 86, .56) 50%, rgba(37, 82, 145, .28) 100%);
+        }
+        .bma-hero::after {
+            background: rgba(8, 25, 48, .08);
+        }
+        .bma-intro-logo {
+            width: 112px;
+            height: 112px;
+            padding: 5px;
+            border: 1px solid rgba(255, 255, 255, .9);
+            border-radius: 50%;
+            background: #fff;
+        }
+        .bma-tool {
+            border-color: rgba(255, 255, 255, .72);
+            box-shadow: 0 16px 38px rgba(5, 25, 49, .28);
+        }
+        .bma-tool-heading {
+            background: #f0f4f9;
+            border-bottom-color: #cad5e3;
+        }
+        .bma-tab .nav-link.active {
+            color: var(--bma-brand-deep);
+            background: #edf3fb;
+        }
+        .bma-tab .nav-link.active::after,
+        .bma-btn {
+            background: #315fa6;
+        }
+        .bma-btn {
+            border-color: #315fa6;
+        }
+        .bma-btn:hover,
+        .bma-btn:focus {
+            background: #173a68;
+            border-color: #173a68;
+        }
+        .bma-security-note i,
+        .bma-login-link {
+            color: #315fa6;
+        }
+        .bma-footer {
+            background: #102d51;
+            border-top-color: #315fa6;
+        }
+        @media (max-width: 767.98px) {
+            .bma-logo { width: 62px; height: 54px; flex-basis: 62px; }
+            .bma-intro-logo { width: 92px; height: 92px; }
+        }
+        <?php endif; ?>
     </style>
 </head>
-<body>
+<body class="<?php echo $is_academy_theme ? 'academy-default-theme' : 'govt-green-theme'; ?>">
     <div class="bma-topbar py-2">
         <div class="container d-flex flex-wrap justify-content-between gap-2">
             <span><?php echo html_escape($tr("Government of the People's Republic of Bangladesh", 'গণপ্রজাতন্ত্রী বাংলাদেশ সরকার')); ?></span>
@@ -462,10 +584,10 @@
             <a href="<?php echo site_url('/'); ?>" class="d-flex align-items-center gap-3 text-decoration-none text-white">
                 <img
                     class="bma-logo"
-                    src="<?php echo base_url('assets/global/logo/bangladesh_logo.png'); ?>"
-                    alt="Bangladesh Government logo"
-                    width="58"
-                    height="58"
+                    src="<?php echo base_url($is_academy_theme ? 'assets/global/logo/BMA.png' : 'assets/global/logo/bangladesh_logo.png'); ?>"
+                    alt="<?php echo html_escape($is_academy_theme ? 'Bangladesh Marine Academy Sylhet logo' : 'Bangladesh Government logo'); ?>"
+                    width="<?php echo $is_academy_theme ? '70' : '58'; ?>"
+                    height="<?php echo $is_academy_theme ? '62' : '58'; ?>"
                 >
                 <span>
                     <strong class="d-block fs-6"><?php echo html_escape($tr('Bangladesh Marine Academy Sylhet', 'বাংলাদেশ মেরিন একাডেমি, সিলেট')); ?></strong>
