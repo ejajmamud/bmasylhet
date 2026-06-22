@@ -16,7 +16,7 @@ $portal_logo = get_portal_theme() === 'academy_default'
                 <p><?php echo html_escape($text('portal_subtitle')); ?></p>
             </div>
 
-            <div class="bma-tool">
+            <div class="bma-tool" id="verification-tool">
                 <div class="bma-tool-heading">
                     <h2>Verify Cadet Certificates</h2>
                     <span>All fields are required</span>

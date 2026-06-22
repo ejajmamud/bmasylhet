@@ -350,6 +350,86 @@
             color: var(--bma-brand-deep);
             background: #fff;
         }
+        .bma-mobile-nav-toggle {
+            display: none;
+            width: 44px;
+            height: 44px;
+            padding: 0;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, .72);
+            border-radius: 4px;
+            font-size: 19px;
+        }
+        .bma-mobile-nav-toggle:hover,
+        .bma-mobile-nav-toggle:focus {
+            color: var(--bma-brand-deep);
+            background: #fff;
+        }
+        .bma-mobile-nav {
+            display: none;
+        }
+        .bma-mobile-nav-link {
+            display: flex;
+            min-height: 44px;
+            padding: 10px 12px;
+            gap: 10px;
+            align-items: center;
+            color: var(--bma-ink);
+            background: #fff;
+            border: 1px solid var(--bma-line);
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .bma-mobile-nav-link:hover,
+        .bma-mobile-nav-link:focus {
+            color: var(--bma-brand-deep);
+            background: var(--bma-soft);
+        }
+        .bma-mobile-nav-link i {
+            width: 18px;
+            color: var(--bma-brand);
+            text-align: center;
+        }
+        .bma-mobile-language {
+            display: flex;
+            min-height: 48px;
+            padding: 8px 10px;
+            gap: 12px;
+            align-items: center;
+            justify-content: space-between;
+            background: #fff;
+            border: 1px solid var(--bma-line);
+            border-radius: 4px;
+        }
+        .bma-mobile-language-label {
+            display: inline-flex;
+            gap: 9px;
+            align-items: center;
+            color: var(--bma-ink);
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .bma-mobile-language-label i {
+            color: var(--bma-brand);
+        }
+        .bma-mobile-language .bma-language {
+            border-color: var(--bma-line);
+        }
+        .bma-mobile-language .bma-language a {
+            color: var(--bma-brand-dark);
+        }
+        .bma-mobile-language .bma-language a + a {
+            border-left-color: var(--bma-line);
+        }
+        .bma-mobile-language .bma-language a.active {
+            color: #fff;
+            background: var(--bma-brand-dark);
+        }
         .bma-label {
             display: block;
             color: #303833;
@@ -434,14 +514,80 @@
             }
             .bma-form-action { grid-column: 1 / -1; }
             .bma-hero { min-height: auto; }
+            .bma-header-inner {
+                flex-wrap: nowrap !important;
+                gap: 18px !important;
+            }
+            .bma-header-brand {
+                min-width: 0;
+                flex: 1 1 auto;
+            }
+            .bma-header-brand > span {
+                min-width: 0;
+            }
+            .bma-site-name {
+                overflow: hidden;
+                max-width: 360px;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            .bma-header-actions {
+                flex: 0 0 auto;
+            }
+            .bma-header-actions .btn,
+            .bma-header-actions .bma-language a {
+                min-height: 36px;
+            }
         }
         @media (max-width: 767.98px) {
             .bma-topbar .container { justify-content: center !important; text-align: center; }
             .bma-topbar .bma-topbar-email { display: none; }
-            .bma-header-inner { justify-content: center !important; text-align: center; }
-            .bma-header-brand { justify-content: center; }
-            .bma-header-actions { width: 100%; justify-content: center; }
-            .bma-header-actions.is-home { justify-content: space-between; }
+            .bma-header {
+                position: relative;
+                padding-top: 6px !important;
+                padding-bottom: 6px !important;
+            }
+            .bma-header-inner {
+                position: relative;
+                justify-content: space-between !important;
+                text-align: left;
+            }
+            .bma-header-brand {
+                justify-content: flex-start;
+                gap: 10px !important;
+            }
+            .bma-header-brand small {
+                display: none;
+            }
+            .bma-site-name {
+                max-width: calc(100vw - 142px);
+                white-space: normal;
+                line-height: 1.2;
+            }
+            .bma-header-actions {
+                display: none !important;
+            }
+            .bma-mobile-nav-toggle {
+                display: inline-flex;
+                flex: 0 0 44px;
+            }
+            .bma-mobile-nav {
+                position: absolute;
+                top: calc(100% + 1px);
+                right: 12px;
+                left: 12px;
+                z-index: 50;
+                padding: 12px;
+                gap: 8px;
+                background: #fff;
+                border: 1px solid var(--bma-line);
+                border-top: 3px solid var(--bma-brand);
+                border-radius: 0 0 4px 4px;
+                box-shadow: 0 12px 26px rgba(7, 34, 20, .2);
+            }
+            .bma-mobile-nav.is-open {
+                display: grid;
+            }
             .bma-site-name { font-size: var(--bma-nav-site-name-size-mobile) !important; }
             .bma-logo { width: 54px; height: 54px; flex-basis: 54px; }
             .bma-hero-content { padding: 28px 0 34px; }
@@ -512,6 +658,17 @@
             color: #fff;
             background: var(--bma-brand-dark);
             border-color: var(--bma-brand-dark) !important;
+        }
+        .academy-default-theme .bma-mobile-nav-toggle {
+            color: var(--bma-brand-deep);
+            border-color: #8ea7c7;
+        }
+        .academy-default-theme .bma-mobile-nav-toggle:hover,
+        .academy-default-theme .bma-mobile-nav-toggle:focus,
+        .academy-default-theme .bma-mobile-nav-toggle[aria-expanded="true"] {
+            color: #fff;
+            background: var(--bma-brand-dark);
+            border-color: var(--bma-brand-dark);
         }
         .bma-language {
             border-color: #91a7c3;
@@ -796,6 +953,44 @@
                     <a class="btn btn-sm btn-light border" href="<?php echo site_url('login'); ?>"><?php echo html_escape($tr('staff_login')); ?></a>
                 <?php endif; ?>
             </nav>
+            <button
+                class="bma-mobile-nav-toggle"
+                type="button"
+                aria-controls="bma-mobile-navigation"
+                aria-expanded="false"
+                aria-label="Open navigation menu"
+            >
+                <i class="fa-solid fa-bars" aria-hidden="true"></i>
+            </button>
+            <nav class="bma-mobile-nav" id="bma-mobile-navigation" aria-label="Mobile navigation">
+                <?php if ($inner_view !== 'verification_home'): ?>
+                    <a class="bma-mobile-nav-link" href="<?php echo site_url('/'); ?>">
+                        <i class="fa-solid fa-shield-check" aria-hidden="true"></i>
+                        <span><?php echo html_escape($tr('verify_button')); ?> Certificate</span>
+                    </a>
+                <?php else: ?>
+                    <a class="bma-mobile-nav-link" href="#verification-tool">
+                        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                        <span><?php echo html_escape($tr('verify_button')); ?> Certificate</span>
+                    </a>
+                <?php endif; ?>
+                <?php if ($this->uri->segment(1) !== 'login'): ?>
+                    <a class="bma-mobile-nav-link" href="<?php echo site_url('login'); ?>">
+                        <i class="fa-solid fa-user-lock" aria-hidden="true"></i>
+                        <span><?php echo html_escape($tr('staff_login')); ?></span>
+                    </a>
+                <?php endif; ?>
+                <div class="bma-mobile-language">
+                    <span class="bma-mobile-language-label">
+                        <i class="fa-solid fa-language" aria-hidden="true"></i>
+                        <span>Language</span>
+                    </span>
+                    <span class="bma-language" aria-label="Language">
+                        <a class="<?php echo $language_code === 'en' ? 'active' : ''; ?>" href="<?php echo site_url('/?lang=en'); ?>" lang="en" hreflang="en">EN</a>
+                        <a class="<?php echo $language_code === 'bn' ? 'active' : ''; ?>" href="<?php echo site_url('/?lang=bn'); ?>" lang="bn" hreflang="bn">BN</a>
+                    </span>
+                </div>
+            </nav>
         </div>
     </header>
 
@@ -816,5 +1011,50 @@
     </footer>
 
     <?php include 'includes_bottom.php'; ?>
+    <script>
+    (function () {
+        var toggle = document.querySelector('.bma-mobile-nav-toggle');
+        var menu = document.getElementById('bma-mobile-navigation');
+        if (!toggle || !menu) return;
+
+        function closeMenu() {
+            menu.classList.remove('is-open');
+            toggle.setAttribute('aria-expanded', 'false');
+            toggle.setAttribute('aria-label', 'Open navigation menu');
+            var icon = toggle.querySelector('i');
+            if (icon) icon.className = 'fa-solid fa-bars';
+        }
+
+        toggle.addEventListener('click', function () {
+            var opening = !menu.classList.contains('is-open');
+            if (opening) {
+                menu.classList.add('is-open');
+                toggle.setAttribute('aria-expanded', 'true');
+                toggle.setAttribute('aria-label', 'Close navigation menu');
+                var icon = toggle.querySelector('i');
+                if (icon) icon.className = 'fa-solid fa-xmark';
+            } else {
+                closeMenu();
+            }
+        });
+
+        document.addEventListener('click', function (event) {
+            if (!menu.contains(event.target) && !toggle.contains(event.target)) {
+                closeMenu();
+            }
+        });
+
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape' && menu.classList.contains('is-open')) {
+                closeMenu();
+                toggle.focus();
+            }
+        });
+
+        window.addEventListener('resize', function () {
+            if (window.innerWidth >= 768) closeMenu();
+        });
+    })();
+    </script>
 </body>
 </html>
