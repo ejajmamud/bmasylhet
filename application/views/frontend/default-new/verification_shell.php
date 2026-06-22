@@ -371,6 +371,12 @@
         .bma-mobile-nav {
             display: none;
         }
+        .bma-mobile-nav-backdrop {
+            display: none;
+        }
+        .bma-mobile-nav-head {
+            display: none;
+        }
         .bma-mobile-nav-link {
             display: flex;
             min-height: 44px;
@@ -572,21 +578,105 @@
                 flex: 0 0 44px;
             }
             .bma-mobile-nav {
-                position: absolute;
-                top: calc(100% + 1px);
-                right: 12px;
-                left: 12px;
-                z-index: 50;
-                padding: 12px;
-                gap: 8px;
+                position: fixed;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 1051;
+                display: flex;
+                width: min(86vw, 340px);
+                padding: 0 16px 20px;
+                gap: 10px;
+                overflow-y: auto;
+                flex-direction: column;
                 background: #fff;
-                border: 1px solid var(--bma-line);
-                border-top: 3px solid var(--bma-brand);
-                border-radius: 0 0 4px 4px;
-                box-shadow: 0 12px 26px rgba(7, 34, 20, .2);
+                border-left: 1px solid var(--bma-line);
+                box-shadow: -12px 0 30px rgba(7, 34, 20, .24);
+                transform: translateX(105%);
+                visibility: hidden;
+                transition: transform 220ms ease, visibility 220ms ease;
             }
             .bma-mobile-nav.is-open {
-                display: grid;
+                transform: translateX(0);
+                visibility: visible;
+            }
+            .bma-mobile-nav-backdrop {
+                position: fixed;
+                inset: 0;
+                z-index: 1050;
+                display: block;
+                background: rgba(7, 20, 14, .58);
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 220ms ease, visibility 220ms ease;
+            }
+            .bma-mobile-nav-backdrop.is-open {
+                opacity: 1;
+                visibility: visible;
+            }
+            .bma-mobile-nav-head {
+                display: flex;
+                min-height: 72px;
+                margin: 0 -16px 6px;
+                padding: 12px 16px;
+                gap: 12px;
+                align-items: center;
+                justify-content: space-between;
+                color: #fff;
+                background: var(--bma-brand-dark);
+                border-bottom: 3px solid var(--bma-brand);
+            }
+            .bma-mobile-nav-identity {
+                display: flex;
+                min-width: 0;
+                gap: 10px;
+                align-items: center;
+            }
+            .bma-mobile-nav-identity img {
+                width: 44px;
+                height: 44px;
+                flex: 0 0 44px;
+                padding: 2px;
+                object-fit: contain;
+                background: #fff;
+                border-radius: 50%;
+            }
+            .bma-mobile-nav-identity strong,
+            .bma-mobile-nav-identity small {
+                display: block;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            .bma-mobile-nav-identity strong {
+                font-size: 12px;
+            }
+            .bma-mobile-nav-identity small {
+                margin-top: 2px;
+                color: rgba(255, 255, 255, .82);
+                font-size: 10px;
+            }
+            .bma-mobile-nav-close {
+                display: inline-flex;
+                width: 40px;
+                height: 40px;
+                padding: 0;
+                flex: 0 0 40px;
+                align-items: center;
+                justify-content: center;
+                color: #fff;
+                background: rgba(255, 255, 255, .1);
+                border: 1px solid rgba(255, 255, 255, .45);
+                border-radius: 4px;
+                font-size: 18px;
+            }
+            .bma-mobile-nav-close:hover,
+            .bma-mobile-nav-close:focus {
+                color: var(--bma-brand-deep);
+                background: #fff;
+            }
+            body.bma-drawer-open {
+                overflow: hidden;
             }
             .bma-site-name { font-size: var(--bma-nav-site-name-size-mobile) !important; }
             .bma-logo { width: 54px; height: 54px; flex-basis: 54px; }
@@ -962,7 +1052,25 @@
             >
                 <i class="fa-solid fa-bars" aria-hidden="true"></i>
             </button>
+            <div class="bma-mobile-nav-backdrop" aria-hidden="true"></div>
             <nav class="bma-mobile-nav" id="bma-mobile-navigation" aria-label="Mobile navigation">
+                <div class="bma-mobile-nav-head">
+                    <div class="bma-mobile-nav-identity">
+                        <img
+                            src="<?php echo html_escape($is_academy_theme ? $academy_logo : $government_logo); ?>"
+                            alt=""
+                            width="44"
+                            height="44"
+                        >
+                        <span>
+                            <strong><?php echo html_escape($tr('institution_name')); ?></strong>
+                            <small><?php echo html_escape($tr('system_title')); ?></small>
+                        </span>
+                    </div>
+                    <button class="bma-mobile-nav-close" type="button" aria-label="Close navigation menu">
+                        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                    </button>
+                </div>
                 <?php if ($inner_view !== 'verification_home'): ?>
                     <a class="bma-mobile-nav-link" href="<?php echo site_url('/'); ?>">
                         <i class="fa-solid fa-shield-check" aria-hidden="true"></i>
@@ -1015,44 +1123,70 @@
     (function () {
         var toggle = document.querySelector('.bma-mobile-nav-toggle');
         var menu = document.getElementById('bma-mobile-navigation');
-        if (!toggle || !menu) return;
+        var backdrop = document.querySelector('.bma-mobile-nav-backdrop');
+        var closeButton = document.querySelector('.bma-mobile-nav-close');
+        if (!toggle || !menu || !backdrop || !closeButton) return;
 
-        function closeMenu() {
+        function closeMenu(returnFocus) {
             menu.classList.remove('is-open');
+            backdrop.classList.remove('is-open');
+            document.body.classList.remove('bma-drawer-open');
             toggle.setAttribute('aria-expanded', 'false');
             toggle.setAttribute('aria-label', 'Open navigation menu');
-            var icon = toggle.querySelector('i');
-            if (icon) icon.className = 'fa-solid fa-bars';
+            if (returnFocus) toggle.focus();
         }
 
         toggle.addEventListener('click', function () {
             var opening = !menu.classList.contains('is-open');
             if (opening) {
                 menu.classList.add('is-open');
+                backdrop.classList.add('is-open');
+                document.body.classList.add('bma-drawer-open');
                 toggle.setAttribute('aria-expanded', 'true');
                 toggle.setAttribute('aria-label', 'Close navigation menu');
-                var icon = toggle.querySelector('i');
-                if (icon) icon.className = 'fa-solid fa-xmark';
+                window.setTimeout(function () {
+                    closeButton.focus();
+                }, 230);
             } else {
-                closeMenu();
+                closeMenu(false);
             }
         });
 
-        document.addEventListener('click', function (event) {
-            if (!menu.contains(event.target) && !toggle.contains(event.target)) {
-                closeMenu();
-            }
+        closeButton.addEventListener('click', function () {
+            closeMenu(true);
+        });
+
+        backdrop.addEventListener('click', function () {
+            closeMenu(true);
+        });
+
+        menu.querySelectorAll('a').forEach(function (link) {
+            link.addEventListener('click', function () {
+                closeMenu(false);
+            });
         });
 
         document.addEventListener('keydown', function (event) {
             if (event.key === 'Escape' && menu.classList.contains('is-open')) {
-                closeMenu();
-                toggle.focus();
+                closeMenu(true);
+            }
+            if (event.key === 'Tab' && menu.classList.contains('is-open')) {
+                var focusable = menu.querySelectorAll('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])');
+                if (!focusable.length) return;
+                var first = focusable[0];
+                var last = focusable[focusable.length - 1];
+                if (event.shiftKey && document.activeElement === first) {
+                    event.preventDefault();
+                    last.focus();
+                } else if (!event.shiftKey && document.activeElement === last) {
+                    event.preventDefault();
+                    first.focus();
+                }
             }
         });
 
         window.addEventListener('resize', function () {
-            if (window.innerWidth >= 768) closeMenu();
+            if (window.innerWidth >= 768) closeMenu(false);
         });
     })();
     </script>

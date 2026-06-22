@@ -436,6 +436,7 @@
     display: grid;
     width: 100%;
     min-width: 0;
+    overflow: hidden;
     padding: 18px;
     grid-template-rows: auto 190px auto;
     gap: 14px;
@@ -458,20 +459,40 @@
     color: var(--bma-dashboard-primary-deep);
 }
 
-.portal-asset-preview {
-    display: block;
+.portal-asset-preview-frame {
+    position: relative;
+    display: flex;
     width: 100%;
     height: 190px;
+    min-width: 0;
+    overflow: hidden;
     padding: 14px;
-    object-fit: contain;
+    align-items: center;
+    justify-content: center;
     background: #f3f6f8;
     border: 1px solid #dce3e8;
     border-radius: 3px;
 }
 
-.portal-asset-preview.is-background {
+.portal-asset-preview-frame.is-background {
     padding: 0;
-    object-fit: cover;
+}
+
+.portal-asset-preview {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    object-fit: contain !important;
+    object-position: center !important;
+}
+
+.portal-asset-preview.is-background {
+    object-fit: cover !important;
 }
 
 .portal-asset-item.is-favicon {
@@ -484,11 +505,15 @@
     min-height: 0;
 }
 
-.portal-asset-preview.is-favicon {
+.portal-asset-preview-frame.is-favicon {
     width: 96px;
     height: 96px;
     padding: 14px;
     justify-self: center;
+}
+
+.portal-asset-preview.is-favicon {
+    object-fit: contain !important;
 }
 
 .portal-asset-control {
@@ -703,7 +728,7 @@
         grid-column: auto;
     }
 
-    .portal-asset-preview.is-favicon {
+    .portal-asset-preview-frame.is-favicon {
         justify-self: start;
     }
 
@@ -835,7 +860,7 @@
         grid-template-columns: 1fr;
     }
 
-    .portal-asset-preview {
+    .portal-asset-preview-frame {
         height: 170px;
     }
 

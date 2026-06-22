@@ -93,12 +93,14 @@ $long_fields = [
                                             <h5 class="mb-1"><?php echo html_escape($asset['label']); ?></h5>
                                             <p class="text-muted mb-0"><?php echo html_escape($asset['description']); ?></p>
                                         </div>
-                                        <img
-                                            class="portal-asset-preview <?php echo $is_background ? 'is-background' : ''; ?> <?php echo $is_favicon ? 'is-favicon' : ''; ?>"
-                                            id="<?php echo $key; ?>_preview"
-                                            src="<?php echo html_escape($preview_source); ?>"
-                                            alt="<?php echo html_escape($asset['label']); ?> preview"
-                                        >
+                                        <div class="portal-asset-preview-frame <?php echo $is_background ? 'is-background' : ''; ?> <?php echo $is_favicon ? 'is-favicon' : ''; ?>">
+                                            <img
+                                                class="portal-asset-preview <?php echo $is_background ? 'is-background' : ''; ?> <?php echo $is_favicon ? 'is-favicon' : ''; ?>"
+                                                id="<?php echo $key; ?>_preview"
+                                                src="<?php echo html_escape($preview_source); ?>"
+                                                alt="<?php echo html_escape($asset['label']); ?> preview"
+                                            >
+                                        </div>
                                         <div class="portal-asset-control">
                                             <div class="custom-file mt-3">
                                                 <input
