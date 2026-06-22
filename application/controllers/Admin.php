@@ -659,7 +659,7 @@ class Admin extends CI_Controller
         if ($param1 == 'portal_assets') {
             try {
                 $this->crud_model->update_portal_assets();
-                $this->session->set_flashdata('flash_message', 'Portal logos and backgrounds updated successfully.');
+                $this->session->set_flashdata('flash_message', 'Portal logos, media, and favicon updated successfully.');
             } catch (RuntimeException $exception) {
                 $this->session->set_flashdata('error_message', $exception->getMessage());
             }
@@ -4503,4 +4503,3 @@ $developer_html
                     // Home page builder
 
                     }
-

@@ -2318,6 +2318,17 @@ class Crud_model extends CI_Model
 
     public function update_portal_settings()
     {
+        $font_sizes = [
+            'portal_nav_site_name_font_size_desktop' => ['default' => 16, 'min' => 12, 'max' => 28],
+            'portal_nav_site_name_font_size_mobile' => ['default' => 16, 'min' => 12, 'max' => 24],
+        ];
+        foreach ($font_sizes as $key => $limits) {
+            $value = (int) $this->input->post($key);
+            $value = $value ?: $limits['default'];
+            $value = max($limits['min'], min($limits['max'], $value));
+            $this->upsert_key_value('frontend_settings', $key, (string) $value);
+        }
+
         $defaults = portal_text_defaults();
         foreach ($defaults as $key => $languages) {
             foreach (['en', 'bn'] as $language) {
@@ -2333,22 +2344,18 @@ class Crud_model extends CI_Model
     public function update_portal_assets()
     {
         $assets = [
-            'portal_govt_logo' => ['fallback' => 'assets/global/logo/bangladesh_logo.png', 'extensions' => ['png', 'jpg', 'jpeg', 'webp']],
-            'portal_academy_logo' => ['fallback' => 'assets/global/logo/BMA.png', 'extensions' => ['png', 'jpg', 'jpeg', 'webp']],
-            'portal_govt_background' => ['fallback' => 'assets/global/logo/login_left_bg.png', 'extensions' => ['png', 'jpg', 'jpeg', 'webp']],
-            'portal_academy_background' => ['fallback' => 'assets/global/logo/academy-default-bg.jpeg', 'extensions' => ['png', 'jpg', 'jpeg', 'webp']],
+            'portal_govt_logo' => ['extensions' => ['png', 'jpg', 'jpeg', 'webp'], 'max_bytes' => 8 * 1024 * 1024, 'directory' => 'uploads/portal/', 'store_path' => true],
+            'portal_academy_logo' => ['extensions' => ['png', 'jpg', 'jpeg', 'webp'], 'max_bytes' => 8 * 1024 * 1024, 'directory' => 'uploads/portal/', 'store_path' => true],
+            'portal_govt_background' => ['extensions' => ['png', 'jpg', 'jpeg', 'webp'], 'max_bytes' => 8 * 1024 * 1024, 'directory' => 'uploads/portal/', 'store_path' => true],
+            'portal_academy_background' => ['extensions' => ['png', 'jpg', 'jpeg', 'webp'], 'max_bytes' => 8 * 1024 * 1024, 'directory' => 'uploads/portal/', 'store_path' => true],
+            'favicon' => ['extensions' => ['png', 'ico', 'jpg', 'jpeg', 'webp'], 'max_bytes' => 2 * 1024 * 1024, 'directory' => 'uploads/system/', 'store_path' => false],
         ];
-
-        $upload_directory = FCPATH . 'uploads/portal/';
-        if (! is_dir($upload_directory)) {
-            mkdir($upload_directory, 0755, true);
-        }
 
         foreach ($assets as $key => $config) {
             if (! isset($_FILES[$key]) || $_FILES[$key]['error'] === UPLOAD_ERR_NO_FILE) {
                 continue;
             }
-            if ($_FILES[$key]['error'] !== UPLOAD_ERR_OK || $_FILES[$key]['size'] > 8 * 1024 * 1024) {
+            if ($_FILES[$key]['error'] !== UPLOAD_ERR_OK || $_FILES[$key]['size'] > $config['max_bytes']) {
                 throw new RuntimeException('Invalid upload for ' . $key);
             }
 
@@ -2358,21 +2365,28 @@ class Crud_model extends CI_Model
             }
 
             $mime = function_exists('mime_content_type') ? mime_content_type($_FILES[$key]['tmp_name']) : '';
-            if ($mime && strpos($mime, 'image/') !== 0) {
+            $allowed_icon_mimes = ['image/x-icon', 'image/vnd.microsoft.icon', 'application/octet-stream'];
+            if ($mime && strpos($mime, 'image/') !== 0 && ! ($key === 'favicon' && in_array($mime, $allowed_icon_mimes, true))) {
                 throw new RuntimeException('Uploaded file is not an image');
             }
 
+            $upload_directory = FCPATH . $config['directory'];
+            if (! is_dir($upload_directory) && ! mkdir($upload_directory, 0755, true)) {
+                throw new RuntimeException('Unable to prepare upload directory');
+            }
+
             $filename = $key . '-' . time() . '-' . bin2hex(random_bytes(4)) . '.' . $extension;
-            $relative_path = 'uploads/portal/' . $filename;
-            if (! move_uploaded_file($_FILES[$key]['tmp_name'], FCPATH . $relative_path)) {
+            $relative_path = $config['directory'] . $filename;
+            if (! move_uploaded_file($_FILES[$key]['tmp_name'], $upload_directory . $filename)) {
                 throw new RuntimeException('Unable to store uploaded image');
             }
 
             $previous = get_frontend_settings($key);
-            if ($previous && strpos($previous, 'uploads/portal/') === 0 && is_file(FCPATH . $previous)) {
-                unlink(FCPATH . $previous);
+            $previous_path = $config['store_path'] ? $previous : $config['directory'] . $previous;
+            if ($previous_path && strpos($previous_path, $config['directory']) === 0 && is_file(FCPATH . $previous_path)) {
+                unlink(FCPATH . $previous_path);
             }
-            $this->upsert_key_value('frontend_settings', $key, $relative_path);
+            $this->upsert_key_value('frontend_settings', $key, $config['store_path'] ? $relative_path : $filename);
         }
     }
 

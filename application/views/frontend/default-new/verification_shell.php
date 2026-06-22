@@ -12,6 +12,8 @@
     $academy_logo = portal_asset('portal_academy_logo', 'assets/global/logo/BMA.png');
     $govt_background = portal_asset('portal_govt_background', 'assets/global/logo/login_left_bg.png');
     $academy_background = portal_asset('portal_academy_background', 'assets/global/logo/academy-default-bg.jpeg');
+    $nav_site_name_size_desktop = max(12, min(28, (int) get_portal_setting('portal_nav_site_name_font_size_desktop', 16)));
+    $nav_site_name_size_mobile = max(12, min(24, (int) get_portal_setting('portal_nav_site_name_font_size_mobile', 16)));
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo html_escape($language_code); ?>" dir="<?php echo $language_dir; ?>">
@@ -90,6 +92,8 @@
             --bma-white: #ffffff;
             --bma-danger: #b42318;
             --bma-focus: #ffd24d;
+            --bma-nav-site-name-size: <?php echo $nav_site_name_size_desktop; ?>px;
+            --bma-nav-site-name-size-mobile: <?php echo $nav_site_name_size_mobile; ?>px;
         }
         html { scroll-behavior: smooth; }
         body {
@@ -122,6 +126,10 @@
             background: #fff;
             border: 2px solid rgba(255, 255, 255, .9);
             border-radius: 50%;
+        }
+        .bma-site-name {
+            font-size: var(--bma-nav-site-name-size) !important;
+            line-height: 1.25;
         }
         .bma-hero {
             position: relative;
@@ -430,8 +438,11 @@
         @media (max-width: 767.98px) {
             .bma-topbar .container { justify-content: center !important; text-align: center; }
             .bma-topbar .bma-topbar-email { display: none; }
-            .bma-header .container { justify-content: center !important; text-align: center; }
-            .bma-header nav { width: 100%; justify-content: center; }
+            .bma-header-inner { justify-content: center !important; text-align: center; }
+            .bma-header-brand { justify-content: center; }
+            .bma-header-actions { width: 100%; justify-content: center; }
+            .bma-header-actions.is-home { justify-content: space-between; }
+            .bma-site-name { font-size: var(--bma-nav-site-name-size-mobile) !important; }
             .bma-logo { width: 54px; height: 54px; flex-basis: 54px; }
             .bma-hero-content { padding: 28px 0 34px; }
             .bma-intro-logo { width: 76px; height: 76px; }
@@ -759,8 +770,8 @@
     </div>
 
     <header class="bma-header py-2">
-        <div class="container d-flex flex-wrap align-items-center justify-content-between gap-3">
-            <a href="<?php echo site_url('/'); ?>" class="d-flex align-items-center gap-3 text-decoration-none text-white">
+        <div class="container d-flex flex-wrap align-items-center justify-content-between gap-3 bma-header-inner">
+            <a href="<?php echo site_url('/'); ?>" class="d-flex align-items-center gap-3 text-decoration-none text-white bma-header-brand">
                 <img
                     class="bma-logo"
                     src="<?php echo html_escape($is_academy_theme ? $academy_logo : $government_logo); ?>"
@@ -769,11 +780,11 @@
                     height="<?php echo $is_academy_theme ? '62' : '58'; ?>"
                 >
                 <span>
-                    <strong class="d-block fs-6"><?php echo html_escape($tr('institution_name')); ?></strong>
+                    <strong class="d-block bma-site-name"><?php echo html_escape($tr('institution_name')); ?></strong>
                     <small class="text-white"><?php echo html_escape($tr('system_title')); ?></small>
                 </span>
             </a>
-            <nav class="d-flex align-items-center gap-2">
+            <nav class="d-flex align-items-center gap-2 bma-header-actions <?php echo $inner_view === 'verification_home' ? 'is-home' : ''; ?>">
                 <span class="bma-language" aria-label="Language">
                     <a class="<?php echo $language_code === 'en' ? 'active' : ''; ?>" href="<?php echo site_url('/?lang=en'); ?>" lang="en" hreflang="en">EN</a>
                     <a class="<?php echo $language_code === 'bn' ? 'active' : ''; ?>" href="<?php echo site_url('/?lang=bn'); ?>" lang="bn" hreflang="bn">BN</a>
