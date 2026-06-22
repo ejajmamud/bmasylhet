@@ -1,0 +1,618 @@
+/* Shared admin geometry. Theme files continue to own colors and typography. */
+.bma-dashboard .navbar-custom > .container-fluid,
+.bma-academy-dashboard .navbar-custom > .container-fluid {
+    display: flex;
+    width: 100%;
+    min-height: inherit;
+    align-items: center;
+}
+
+.bma-dashboard .topnav-logo,
+.bma-academy-dashboard .topnav-logo {
+    position: static;
+    flex: 0 1 auto;
+    min-width: 0;
+}
+
+.bma-dashboard .bma-admin-menu,
+.bma-academy-dashboard .bma-admin-menu {
+    display: flex;
+    height: auto;
+    margin-left: auto;
+    align-items: center;
+    flex: 0 0 auto;
+    float: none !important;
+}
+
+.bma-admin-menu > li,
+.bma-admin-menu .notification-list,
+.bma-admin-menu .topbar-dropdown {
+    position: relative;
+    height: auto;
+}
+
+.bma-dashboard .bma-admin-profile,
+.bma-academy-dashboard .bma-admin-profile {
+    position: static;
+    display: flex !important;
+    width: auto !important;
+    min-width: 190px !important;
+    max-width: 260px !important;
+    height: 54px !important;
+    margin: 0 !important;
+    padding: 7px 12px !important;
+    align-items: center;
+    gap: 10px;
+    border-radius: 3px;
+    line-height: 1.2;
+}
+
+.bma-admin-profile .account-user-avatar {
+    position: static;
+    display: block;
+    flex: 0 0 36px;
+    width: 36px;
+    height: 36px;
+}
+
+.bma-admin-profile .account-user-avatar img {
+    display: block;
+    width: 36px;
+    height: 36px;
+    object-fit: cover;
+}
+
+.bma-admin-profile-copy {
+    display: flex;
+    min-width: 0;
+    flex: 1 1 auto;
+    flex-direction: column;
+}
+
+.bma-admin-profile .account-user-name,
+.bma-admin-profile .account-position {
+    position: static;
+    display: block;
+    overflow: hidden;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.bma-admin-profile .account-user-name {
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.bma-admin-profile .account-position {
+    margin-top: 3px;
+    font-size: 10px;
+}
+
+.bma-profile-caret {
+    flex: 0 0 auto;
+    font-size: 10px;
+}
+
+.bma-mobile-menu-trigger {
+    display: inline-flex;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    align-items: center;
+    justify-content: center;
+}
+
+.bma-dashboard .button-menu-mobile,
+.bma-academy-dashboard .button-menu-mobile {
+    position: static;
+    width: 44px;
+    height: 44px;
+    margin: 0 8px 0 0;
+    padding: 0;
+    flex: 0 0 44px;
+}
+
+.bma-dashboard .side-nav .side-nav-link > i:first-child,
+.bma-academy-dashboard .side-nav .side-nav-link > i:first-child {
+    display: inline-flex;
+    width: 21px;
+    min-width: 21px;
+    height: 21px;
+    margin-right: 9px;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    line-height: 1;
+    vertical-align: middle;
+}
+
+.bma-page-heading {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.bma-page-heading > div {
+    min-width: 0;
+}
+
+.bma-page-heading .btn {
+    flex: 0 0 auto;
+}
+
+.bma-metric-column {
+    display: flex;
+}
+
+.bma-metric-card {
+    width: 100%;
+    min-height: 126px;
+    margin-bottom: 24px;
+    transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.bma-metric-card:hover {
+    transform: translateY(-2px);
+}
+
+.bma-metric-content {
+    display: flex;
+    min-height: 88px;
+    gap: 14px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.bma-metric-content > div {
+    min-width: 0;
+}
+
+.bma-metric-label {
+    color: #7a8797;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.35;
+    text-transform: uppercase;
+}
+
+.bma-metric-value {
+    margin-top: 8px;
+    color: #102d51;
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.bma-dashboard .bma-metric-value {
+    color: var(--bma-dashboard-primary-deep);
+}
+
+.bma-metric-icon {
+    display: inline-flex;
+    width: 54px;
+    height: 54px;
+    flex: 0 0 54px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 23px;
+}
+
+.bma-metric-icon-primary {
+    color: #315fa6;
+    background: #e1e8fb;
+}
+
+.bma-metric-icon-success {
+    color: #087d61;
+    background: #d8f5ec;
+}
+
+.bma-metric-icon-warning {
+    color: #9a6800;
+    background: #fff0c6;
+}
+
+.bma-metric-icon-info {
+    color: #177e9f;
+    background: #d9f1f8;
+}
+
+.bma-dashboard .bma-metric-icon-primary,
+.bma-dashboard .bma-metric-icon-success {
+    color: var(--bma-dashboard-primary-dark);
+    background: #dff3e6;
+}
+
+.bma-cadet-fields {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 18px 16px;
+}
+
+.bma-cadet-field {
+    min-width: 0;
+    margin: 0;
+    grid-column: span 4;
+}
+
+.bma-cadet-field-name {
+    grid-column: span 6;
+}
+
+.bma-cadet-field-compact {
+    grid-column: span 2;
+}
+
+.bma-cadet-field label {
+    display: flex;
+    min-height: 20px;
+    margin-bottom: 8px;
+    align-items: flex-end;
+    gap: 4px;
+    line-height: 1.25;
+}
+
+.bma-cadet-field .form-control {
+    width: 100%;
+    height: 42px;
+}
+
+.bma-document-grid > [class*="col-"] {
+    display: flex;
+    margin-bottom: 16px;
+}
+
+.bma-document-upload {
+    width: 100%;
+    min-height: 160px;
+    margin: 0;
+}
+
+.bma-photo-upload-preview {
+    position: relative;
+    display: flex;
+    width: 100%;
+    min-height: 280px;
+    max-height: 380px;
+    margin-bottom: 16px;
+    overflow: hidden;
+    align-items: center;
+    justify-content: center;
+    background: #e8edf2;
+    border: 1px solid #d3dce6;
+    border-radius: 4px;
+    aspect-ratio: 4 / 3;
+}
+
+.bma-photo-upload-preview img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 280px;
+    object-fit: contain;
+    background: #f6f8fa;
+}
+
+.bma-photo-placeholder {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    color: #8a98a4;
+}
+
+.bma-photo-placeholder i {
+    font-size: 64px;
+}
+
+.bma-photo-placeholder span {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .03em;
+    text-transform: uppercase;
+}
+
+.bma-file-control {
+    display: block;
+    width: 100%;
+    min-width: 0;
+}
+
+.bma-file-name {
+    display: block;
+    overflow: hidden;
+    margin-top: 7px;
+    color: #657489;
+    font-size: 11px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.bma-responsive-table td::before {
+    display: none;
+}
+
+@media (min-width: 1600px) {
+    .bma-dashboard .content-page > .content > .container-fluid,
+    .bma-academy-dashboard .content-page > .content > .container-fluid {
+        max-width: 1900px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    .bma-metric-card {
+        min-height: 138px;
+    }
+}
+
+@media (max-width: 1199.98px) {
+    .bma-cadet-field-name {
+        grid-column: span 12;
+    }
+
+    .bma-cadet-field-compact {
+        grid-column: span 4;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .bma-dashboard .navbar-custom > .container-fluid,
+    .bma-academy-dashboard .navbar-custom > .container-fluid {
+        padding-right: 10px;
+        padding-left: 10px;
+    }
+
+    .bma-dashboard .bma-admin-profile,
+    .bma-academy-dashboard .bma-admin-profile {
+        min-width: 52px !important;
+        max-width: 52px !important;
+        padding: 8px !important;
+        justify-content: center;
+    }
+
+    .bma-admin-profile-copy,
+    .bma-profile-caret {
+        display: none;
+    }
+
+    .bma-cadet-field {
+        grid-column: span 6;
+    }
+
+    .bma-cadet-field-name {
+        grid-column: span 12;
+    }
+
+    .bma-cadet-field-compact {
+        grid-column: span 4;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .bma-dashboard .topnav-logo,
+    .bma-academy-dashboard .topnav-logo {
+        margin-right: auto;
+    }
+
+    .bma-admin-menu > .notification-list.d-lg-none {
+        display: none !important;
+    }
+
+    .bma-dashboard .button-menu-mobile,
+    .bma-academy-dashboard .button-menu-mobile {
+        order: 1;
+    }
+
+    .bma-dashboard .bma-admin-menu,
+    .bma-academy-dashboard .bma-admin-menu {
+        margin-left: 0;
+        order: 2;
+    }
+
+    .bma-dashboard .topnav-logo-lg,
+    .bma-academy-dashboard .topnav-logo-lg {
+        display: none !important;
+    }
+
+    .bma-dashboard .topnav-logo-sm,
+    .bma-academy-dashboard .topnav-logo-sm {
+        display: flex !important;
+        height: 60px;
+        align-items: center;
+    }
+
+    .bma-dashboard .topnav-logo-sm img,
+    .bma-academy-dashboard .topnav-logo-sm img {
+        width: 46px;
+        height: 46px;
+        object-fit: contain;
+    }
+
+    .bma-page-heading {
+        align-items: flex-start;
+    }
+
+    .bma-page-heading .btn {
+        min-height: 40px;
+    }
+
+    .bma-metric-grid {
+        margin-right: -8px;
+        margin-left: -8px;
+    }
+
+    .bma-metric-column {
+        padding-right: 8px;
+        padding-left: 8px;
+    }
+
+    .bma-metric-card {
+        min-height: 112px;
+        margin-bottom: 16px;
+    }
+
+    .bma-metric-content {
+        min-height: 78px;
+    }
+
+    .bma-metric-label {
+        font-size: 10px;
+    }
+
+    .bma-metric-value {
+        font-size: 26px;
+    }
+
+    .bma-metric-icon {
+        width: 46px;
+        height: 46px;
+        flex-basis: 46px;
+        font-size: 19px;
+    }
+
+    .bma-cadet-fields {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .bma-cadet-field,
+    .bma-cadet-field-name,
+    .bma-cadet-field-compact {
+        grid-column: 1;
+    }
+
+    .bma-photo-upload-preview,
+    .bma-photo-upload-preview img {
+        min-height: 230px;
+    }
+
+    .bma-responsive-table,
+    .bma-responsive-table tbody,
+    .bma-responsive-table tr,
+    .bma-responsive-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .bma-responsive-table thead {
+        position: absolute;
+        overflow: hidden;
+        width: 1px;
+        height: 1px;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+    }
+
+    .bma-responsive-table tbody tr {
+        margin-bottom: 12px;
+        padding: 10px 12px;
+        background: #fff;
+        border: 1px solid #dbe3ec;
+        border-radius: 3px;
+    }
+
+    .bma-responsive-table tbody tr:last-child {
+        margin-bottom: 0;
+    }
+
+    .bma-responsive-table td,
+    .bma-responsive-table.table-centered td {
+        position: relative;
+        min-height: 34px;
+        padding: 8px 0 8px 42%;
+        border-top: 1px solid #edf1f5;
+        text-align: left !important;
+        white-space: normal;
+    }
+
+    .bma-responsive-table td:first-child {
+        border-top: 0;
+    }
+
+    .bma-responsive-table td::before {
+        position: absolute;
+        top: 8px;
+        left: 0;
+        display: block;
+        width: 38%;
+        color: #6b7888;
+        content: attr(data-label);
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: .02em;
+        text-transform: uppercase;
+    }
+}
+
+@media (max-width: 479.98px) {
+    .bma-dashboard .navbar-custom > .container-fluid,
+    .bma-academy-dashboard .navbar-custom > .container-fluid {
+        padding-right: 6px;
+        padding-left: 6px;
+    }
+
+    .bma-dashboard .button-menu-mobile,
+    .bma-academy-dashboard .button-menu-mobile,
+    .bma-mobile-menu-trigger {
+        width: 40px;
+        flex-basis: 40px;
+    }
+
+    .bma-dashboard .bma-admin-profile,
+    .bma-academy-dashboard .bma-admin-profile {
+        min-width: 46px !important;
+        max-width: 46px !important;
+        height: 48px !important;
+        padding: 5px !important;
+    }
+
+    .bma-admin-profile .account-user-avatar,
+    .bma-admin-profile .account-user-avatar img {
+        width: 34px;
+        height: 34px;
+        flex-basis: 34px;
+    }
+
+    .bma-page-heading {
+        flex-direction: column;
+    }
+
+    .bma-page-heading .btn {
+        width: 100%;
+    }
+
+    .bma-section-heading {
+        gap: 8px;
+        align-items: flex-start !important;
+        flex-direction: column;
+    }
+
+    .bma-section-heading .badge {
+        max-width: 100%;
+        white-space: normal;
+    }
+
+    .bma-metric-column {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .bma-metric-card {
+        min-height: 102px;
+    }
+
+    .bma-metric-content {
+        min-height: 68px;
+    }
+
+    .bma-photo-upload-preview,
+    .bma-photo-upload-preview img {
+        min-height: 210px;
+    }
+}

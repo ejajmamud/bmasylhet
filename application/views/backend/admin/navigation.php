@@ -17,14 +17,14 @@ $settingsPages = ['system_settings', 'frontend_settings', 'theme_settings', 'man
         <li class="side-nav-title side-nav-item">Certificate System</li>
         <li class="side-nav-item <?php echo $page_name === 'dashboard' ? 'active' : ''; ?>">
             <a href="<?php echo site_url('admin/dashboard'); ?>" class="side-nav-link">
-                <i class="dripicons-view-apps"></i><span>Dashboard</span>
+                <i class="fas fa-th-large" aria-hidden="true"></i><span>Dashboard</span>
             </a>
         </li>
 
         <?php if (has_permission('cadet_view')): ?>
             <li class="side-nav-item <?php echo in_array($page_name, $cadetPages, true) ? 'active' : ''; ?>">
                 <a href="javascript:void(0)" class="side-nav-link">
-                    <i class="mdi mdi-account-card-details-outline"></i>
+                    <i class="fas fa-id-card" aria-hidden="true"></i>
                     <span>Cadet Records</span><span class="menu-arrow"></span>
                 </a>
                 <ul class="side-nav-second-level" aria-expanded="false">
@@ -43,7 +43,7 @@ $settingsPages = ['system_settings', 'frontend_settings', 'theme_settings', 'man
         <?php if (has_permission('verification_log_view') || has_permission('cadet_audit_view')): ?>
             <li class="side-nav-item <?php echo in_array($page_name, $logPages, true) ? 'active' : ''; ?>">
                 <a href="javascript:void(0)" class="side-nav-link">
-                    <i class="mdi mdi-shield-search"></i><span>Activity</span><span class="menu-arrow"></span>
+                    <i class="fas fa-shield-alt" aria-hidden="true"></i><span>Activity</span><span class="menu-arrow"></span>
                 </a>
                 <ul class="side-nav-second-level" aria-expanded="false">
                     <?php if (has_permission('verification_log_view')): ?><li><a href="<?php echo site_url('admin/verification-logs'); ?>">Verification Logs</a></li><?php endif; ?>
@@ -55,7 +55,7 @@ $settingsPages = ['system_settings', 'frontend_settings', 'theme_settings', 'man
         <?php if (has_permission('admins')): ?>
             <li class="side-nav-item <?php echo in_array($page_name, ['admins', 'admin_add', 'admin_edit', 'admin_permission'], true) ? 'active' : ''; ?>">
                 <a href="<?php echo site_url('admin/admins'); ?>" class="side-nav-link">
-                    <i class="mdi mdi-account-key-outline"></i><span>Administrators</span>
+                    <i class="fas fa-user-shield" aria-hidden="true"></i><span>Administrators</span>
                 </a>
             </li>
         <?php endif; ?>
@@ -64,14 +64,14 @@ $settingsPages = ['system_settings', 'frontend_settings', 'theme_settings', 'man
         <?php if (has_permission('theme')): ?>
             <li class="side-nav-item <?php echo $page_name === 'theme_settings' ? 'active' : ''; ?>">
                 <a href="<?php echo site_url('admin/theme_settings'); ?>" class="side-nav-link">
-                    <i class="mdi mdi-palette-outline"></i><span>Theme Settings</span>
+                    <i class="fas fa-palette" aria-hidden="true"></i><span>Theme Settings</span>
                 </a>
             </li>
         <?php endif; ?>
         <?php if (has_permission('settings')): ?>
             <li class="side-nav-item <?php echo in_array($page_name, ['system_settings', 'frontend_settings'], true) ? 'active' : ''; ?>">
                 <a href="javascript:void(0)" class="side-nav-link">
-                    <i class="mdi mdi-cog-outline"></i><span>Settings</span><span class="menu-arrow"></span>
+                    <i class="fas fa-cog" aria-hidden="true"></i><span>Settings</span><span class="menu-arrow"></span>
                 </a>
                 <ul class="side-nav-second-level" aria-expanded="false">
                     <li><a href="<?php echo site_url('admin/system_settings'); ?>">System Settings</a></li>
@@ -83,12 +83,12 @@ $settingsPages = ['system_settings', 'frontend_settings', 'theme_settings', 'man
         <li class="side-nav-title side-nav-item mt-3">Account</li>
         <li class="side-nav-item <?php echo $page_name === 'manage_profile' ? 'active' : ''; ?>">
             <a href="<?php echo site_url('admin/manage_profile'); ?>" class="side-nav-link">
-                <i class="mdi mdi-account-circle-outline"></i><span>My Profile</span>
+                <i class="fas fa-user-circle" aria-hidden="true"></i><span>My Profile</span>
             </a>
         </li>
         <li class="side-nav-item">
             <a href="<?php echo site_url('login/logout'); ?>" class="side-nav-link">
-                <i class="mdi mdi-logout"></i><span>Sign Out</span>
+                <i class="fas fa-sign-out-alt" aria-hidden="true"></i><span>Sign Out</span>
             </a>
         </li>
     </ul>

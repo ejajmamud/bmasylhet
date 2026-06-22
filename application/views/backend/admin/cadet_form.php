@@ -12,12 +12,12 @@ $action = $editing ? site_url('admin/cadets/update/' . $cadet['id']) : site_url(
 <div class="row">
     <div class="col-12">
         <div class="card">
-            <div class="card-body d-flex flex-wrap align-items-center justify-content-between">
+            <div class="card-body bma-page-heading">
                 <div>
-                    <h4 class="page-title mb-1"><i class="mdi mdi-account-card-details title_icon"></i> <?php echo $editing ? 'Edit Cadet' : 'Add Cadet'; ?></h4>
+                    <h4 class="page-title mb-1"><i class="fas fa-id-card title_icon" aria-hidden="true"></i> <?php echo $editing ? 'Edit Cadet' : 'Add Cadet'; ?></h4>
                     <p class="text-muted mb-0"><?php echo $editing ? html_escape($cadet['cadet_number'] . ' - ' . $cadet['full_name']) : 'Create the cadet profile and attach the four official certificates.'; ?></p>
                 </div>
-                <a href="<?php echo $editing ? site_url('admin/cadets/view/' . $cadet['id']) : site_url('admin/cadets'); ?>" class="btn btn-light"><i class="mdi mdi-arrow-left mr-1"></i> Back</a>
+                <a href="<?php echo $editing ? site_url('admin/cadets/view/' . $cadet['id']) : site_url('admin/cadets'); ?>" class="btn btn-light"><i class="fas fa-arrow-left mr-1" aria-hidden="true"></i> Back</a>
             </div>
         </div>
     </div>
@@ -30,8 +30,8 @@ $action = $editing ? site_url('admin/cadets/update/' . $cadet['id']) : site_url(
             <div class="card">
                 <div class="card-body">
                     <h4 class="header-title mb-4">Cadet Identity</h4>
-                    <div class="row">
-                        <div class="form-group col-md-4">
+                    <div class="bma-cadet-fields">
+                        <div class="form-group bma-cadet-field">
                             <label for="department_id">Department <span class="text-danger">*</span></label>
                             <select class="form-control" id="department_id" name="department_id" required>
                                 <option value="">Select Department</option>
@@ -42,19 +42,19 @@ $action = $editing ? site_url('admin/cadets/update/' . $cadet['id']) : site_url(
                                 <?php endforeach; ?>
                             </select>
                         </div>
-                        <div class="form-group col-md-4">
+                        <div class="form-group bma-cadet-field">
                             <label for="cadet_number">Cadet Number <span class="text-danger">*</span></label>
                             <input class="form-control text-uppercase" id="cadet_number" name="cadet_number" value="<?php echo $old('cadet_number'); ?>" maxlength="80" placeholder="BMAS-0037" required>
                         </div>
-                        <div class="form-group col-md-4">
+                        <div class="form-group bma-cadet-field">
                             <label for="date_of_birth">Date of Birth <span class="text-danger">*</span></label>
                             <input class="form-control" type="date" id="date_of_birth" name="date_of_birth" value="<?php echo $old('date_of_birth'); ?>" max="<?php echo date('Y-m-d'); ?>" required>
                         </div>
-                        <div class="form-group col-md-6">
+                        <div class="form-group bma-cadet-field bma-cadet-field-name">
                             <label for="full_name">Cadet Full Name <span class="text-danger">*</span></label>
                             <input class="form-control text-uppercase" id="full_name" name="full_name" value="<?php echo $old('full_name'); ?>" maxlength="160" required>
                         </div>
-                        <div class="form-group col-md-2">
+                        <div class="form-group bma-cadet-field bma-cadet-field-compact">
                             <label for="batch_number">Batch <span class="text-danger">*</span></label>
                             <select class="form-control" id="batch_number" name="batch_number" required>
                                 <option value="">Select</option>
@@ -64,7 +64,7 @@ $action = $editing ? site_url('admin/cadets/update/' . $cadet['id']) : site_url(
                                 <?php endfor; ?>
                             </select>
                         </div>
-                        <div class="form-group col-md-2">
+                        <div class="form-group bma-cadet-field bma-cadet-field-compact">
                             <label for="session_start_year">Session From <span class="text-danger">*</span></label>
                             <select class="form-control" id="session_start_year" name="session_start_year" required>
                                 <option value="">Year</option>
@@ -73,7 +73,7 @@ $action = $editing ? site_url('admin/cadets/update/' . $cadet['id']) : site_url(
                                 <?php endfor; ?>
                             </select>
                         </div>
-                        <div class="form-group col-md-2">
+                        <div class="form-group bma-cadet-field bma-cadet-field-compact">
                             <label for="session_end_year">Session To <span class="text-danger">*</span></label>
                             <select class="form-control" id="session_end_year" name="session_end_year" required>
                                 <option value="">Year</option>
@@ -88,15 +88,15 @@ $action = $editing ? site_url('admin/cadets/update/' . $cadet['id']) : site_url(
 
             <div class="card">
                 <div class="card-body">
-                    <div class="d-flex align-items-center justify-content-between mb-4">
+                    <div class="d-flex align-items-center justify-content-between mb-4 bma-section-heading">
                         <h4 class="header-title mb-0">Certificate Documents</h4>
-                        <span class="badge badge-light">PDF, JPG or PNG · Max <?php echo (int) $max_upload_mb; ?> MB each</span>
+                        <span class="badge badge-light">PDF, JPG or PNG - Max <?php echo (int) $max_upload_mb; ?> MB each</span>
                     </div>
-                    <div class="row">
+                    <div class="row bma-document-grid">
                         <?php foreach ($document_types as $type): ?>
                             <?php $current = $document_map[$type['code']] ?? null; ?>
                             <div class="col-md-6">
-                                <div class="border rounded p-3 mb-3 h-100">
+                                <div class="border rounded p-3 bma-document-upload">
                                     <div class="d-flex justify-content-between align-items-start mb-2">
                                         <label for="document_<?php echo html_escape($type['code']); ?>" class="font-weight-bold mb-0">
                                             <span <?php echo $type['code'] === 'pre_sea_course_certificate' ? 'id="pre-sea-document-label"' : ''; ?>>
@@ -116,7 +116,7 @@ $action = $editing ? site_url('admin/cadets/update/' . $cadet['id']) : site_url(
                                     </div>
                                     <?php if ($current && $current['id']): ?>
                                         <div class="small text-muted text-truncate mb-2"><?php echo html_escape($current['original_filename']); ?></div>
-                                        <a href="<?php echo site_url('admin/cadets/document/' . $current['uuid']); ?>" target="_blank" class="btn btn-sm btn-light mb-2"><i class="mdi mdi-eye mr-1"></i> Preview</a>
+                                        <a href="<?php echo site_url('admin/cadets/document/' . $current['uuid']); ?>" target="_blank" class="btn btn-sm btn-light mb-2"><i class="fas fa-eye mr-1" aria-hidden="true"></i> Preview</a>
                                     <?php endif; ?>
                                     <input
                                         class="form-control-file"
@@ -138,22 +138,28 @@ $action = $editing ? site_url('admin/cadets/update/' . $cadet['id']) : site_url(
             <div class="card">
                 <div class="card-body">
                     <h4 class="header-title mb-4">Student Image</h4>
-                    <?php if ($editing && ! empty($cadet['photo_thumbnail_path'])): ?>
-                        <img src="<?php echo site_url('admin/cadets/photo/' . $cadet['uuid']); ?>" alt="<?php echo html_escape($cadet['full_name']); ?>" class="img-fluid rounded mb-3" style="width:100%;max-height:360px;object-fit:cover">
-                    <?php else: ?>
-                        <div class="d-flex align-items-center justify-content-center rounded bg-light mb-3" style="height:280px">
-                            <i class="mdi mdi-account-box-outline text-muted" style="font-size:72px"></i>
+                    <div class="bma-photo-upload-preview" id="student-image-preview">
+                        <img
+                            id="student-image-preview-image"
+                            src="<?php echo ($editing && ! empty($cadet['photo_thumbnail_path'])) ? site_url('admin/cadets/photo/' . $cadet['uuid']) : ''; ?>"
+                            alt="<?php echo ($editing && ! empty($cadet['full_name'])) ? html_escape($cadet['full_name']) : 'Selected student image preview'; ?>"
+                            <?php echo ($editing && ! empty($cadet['photo_thumbnail_path'])) ? '' : 'hidden'; ?>
+                        >
+                        <div class="bma-photo-placeholder" id="student-image-placeholder" <?php echo ($editing && ! empty($cadet['photo_thumbnail_path'])) ? 'hidden' : ''; ?>>
+                            <i class="fas fa-portrait" aria-hidden="true"></i>
+                            <span>Student image preview</span>
                         </div>
-                    <?php endif; ?>
-                    <input class="form-control-file" type="file" id="student_image" name="student_image" accept=".jpg,.jpeg,.png,image/jpeg,image/png" <?php echo ($editing && ! empty($cadet['photo_thumbnail_path'])) ? '' : 'required'; ?>>
-                    <small class="form-text text-muted">JPG or PNG · Max <?php echo (int) $max_upload_mb; ?> MB</small>
+                    </div>
+                    <input class="form-control-file bma-file-control" type="file" id="student_image" name="student_image" accept=".jpg,.jpeg,.png,image/jpeg,image/png" <?php echo ($editing && ! empty($cadet['photo_thumbnail_path'])) ? '' : 'required'; ?>>
+                    <span class="bma-file-name" id="student-image-file-name" aria-live="polite">No new image selected</span>
+                    <small class="form-text text-muted">JPG or PNG - Max <?php echo (int) $max_upload_mb; ?> MB</small>
                 </div>
             </div>
 
             <div class="card">
                 <div class="card-body">
                     <button type="submit" class="btn btn-primary btn-block">
-                        <i class="mdi mdi-content-save mr-1"></i> <?php echo $editing ? 'Save Changes' : 'Save Cadet Record'; ?>
+                        <i class="fas fa-save mr-1" aria-hidden="true"></i> <?php echo $editing ? 'Save Changes' : 'Save Cadet Record'; ?>
                     </button>
                     <?php if ($editing): ?>
                         <a href="<?php echo site_url('admin/cadets/view/' . $cadet['id']); ?>" class="btn btn-light btn-block">Cancel</a>
@@ -191,5 +197,37 @@ $action = $editing ? site_url('admin/cadets/update/' . $cadet['id']) : site_url(
     }
     department.addEventListener('change', updatePreSeaLabel);
     updatePreSeaLabel();
+
+    var studentImage = document.getElementById('student_image');
+    var previewImage = document.getElementById('student-image-preview-image');
+    var previewPlaceholder = document.getElementById('student-image-placeholder');
+    var previewFileName = document.getElementById('student-image-file-name');
+    var previewObjectUrl = null;
+
+    studentImage.addEventListener('change', function () {
+        var file = this.files && this.files[0] ? this.files[0] : null;
+        if (previewObjectUrl) {
+            URL.revokeObjectURL(previewObjectUrl);
+            previewObjectUrl = null;
+        }
+
+        if (!file) {
+            previewFileName.textContent = 'No new image selected';
+            return;
+        }
+
+        if (file.type.indexOf('image/') !== 0) {
+            this.value = '';
+            previewFileName.textContent = 'Please select a JPG or PNG image.';
+            return;
+        }
+
+        previewObjectUrl = URL.createObjectURL(file);
+        previewImage.src = previewObjectUrl;
+        previewImage.alt = 'Preview of ' + file.name;
+        previewImage.hidden = false;
+        previewPlaceholder.hidden = true;
+        previewFileName.textContent = file.name;
+    });
 })();
 </script>
